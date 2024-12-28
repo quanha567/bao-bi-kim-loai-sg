@@ -1,16 +1,303 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import pluginReact from 'eslint-plugin-react'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import eslintConfigPrettier from 'eslint-config-prettier'
+import perfectionist from 'eslint-plugin-perfectionist'
+import unusedImports from 'eslint-plugin-unused-imports'
+import globals from 'globals'
+import tseslint from 'typescript-eslint'
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import pluginJs from '@eslint/js'
 
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-];
-
-export default eslintConfig;
+/** @type {import('eslint').Linter.Config[]} */
+export default [
+    { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
+    { languageOptions: { globals: globals.browser } },
+    pluginJs.configs.recommended,
+    ...tseslint.configs.recommended,
+    pluginReact.configs.flat.recommended,
+    {
+        plugins: {
+            perfectionist,
+            'unused-imports': unusedImports,
+        },
+        rules: {
+            '@typescript-eslint/no-explicit-any': 'off',
+            'no-unused-vars': 'off', // or "@typescript-eslint/no-unused-vars": "off",
+            'perfectionist/sort-array-includes': [
+                'error',
+                {
+                    customGroups: [],
+                    groupKind: 'literals-first',
+                    groups: [],
+                    ignoreCase: true,
+                    order: 'asc',
+                    partitionByNewLine: false,
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                    useConfigurationIf: {},
+                },
+            ],
+            'perfectionist/sort-enums': [
+                'error',
+                {
+                    forceNumericSort: false,
+                    ignoreCase: true,
+                    order: 'asc',
+                    partitionByComment: false,
+                    partitionByNewLine: false,
+                    sortByValue: false,
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                },
+            ],
+            'perfectionist/sort-exports': [
+                'error',
+                {
+                    order: 'asc',
+                    type: 'natural',
+                },
+            ],
+            'perfectionist/sort-heritage-clauses': [
+                'error',
+                {
+                    customGroups: {},
+                    groups: [],
+                    ignoreCase: true,
+                    order: 'asc',
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                },
+            ],
+            'perfectionist/sort-imports': [
+                'error',
+                {
+                    customGroups: {
+                        type: {
+                            component: ['@/component/*', 'component/*'],
+                            react: ['react$', 'react-.+'],
+                            'react-redux': ['react-redux', '@reduxjs/toolkit'],
+                            zmp: ['zmp$', 'zmp-.+'],
+                        },
+                        value: {
+                            component: ['@/component/*', 'component/*'],
+                            react: ['react$', 'react-.+'],
+                            'react-redux': ['react-redux', '@reduxjs/toolkit'],
+                            zmp: ['zmp$', 'zmp-.+'],
+                        },
+                    },
+                    environment: 'node',
+                    groups: [
+                        'react',
+                        'react-redux',
+                        'zmp',
+                        'type',
+                        ['builtin', 'external'],
+                        'component',
+                        'internal-type',
+                        'internal',
+                        ['parent-type', 'sibling-type', 'index-type'],
+                        ['parent', 'sibling', 'index'],
+                        'object',
+                        'unknown',
+                    ],
+                    ignoreCase: true,
+                    internalPattern: ['@/*'],
+                    maxLineLength: undefined,
+                    newlinesBetween: 'always',
+                    order: 'asc',
+                    partitionByComment: false,
+                    partitionByNewLine: false,
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                },
+            ],
+            'perfectionist/sort-interfaces': [
+                'error',
+                {
+                    customGroups: [],
+                    groupKind: 'mixed',
+                    groups: [],
+                    ignoreCase: true,
+                    ignorePattern: [],
+                    newlinesBetween: 'ignore',
+                    order: 'asc',
+                    partitionByComment: false,
+                    partitionByNewLine: false,
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                },
+            ],
+            'perfectionist/sort-intersection-types': [
+                'error',
+                {
+                    groups: [],
+                    ignoreCase: true,
+                    newlinesBetween: 'ignore',
+                    order: 'asc',
+                    partitionByComment: false,
+                    partitionByNewLine: false,
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                },
+            ],
+            'perfectionist/sort-jsx-props': [
+                'error',
+                {
+                    customGroups: {},
+                    groups: [],
+                    ignoreCase: true,
+                    ignorePattern: [],
+                    order: 'asc',
+                    specialCharacters: 'keep',
+                    type: 'line-length',
+                },
+            ],
+            'perfectionist/sort-maps': [
+                'error',
+                {
+                    ignoreCase: true,
+                    order: 'asc',
+                    partitionByComment: false,
+                    partitionByNewLine: false,
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                },
+            ],
+            'perfectionist/sort-modules': [
+                'error',
+                {
+                    customGroups: [],
+                    groups: [
+                        'declare-enum',
+                        'export-enum',
+                        'enum',
+                        ['declare-interface', 'declare-type'],
+                        ['export-interface', 'export-type'],
+                        ['interface', 'type'],
+                        'declare-class',
+                        'class',
+                        'export-class',
+                        'declare-function',
+                        'export-function',
+                        'function',
+                    ],
+                    ignoreCase: true,
+                    newlinesBetween: 'ignore',
+                    order: 'asc',
+                    partitionByComment: false,
+                    partitionByNewLine: false,
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                },
+            ],
+            'perfectionist/sort-named-exports': [
+                'error',
+                {
+                    order: 'asc',
+                    type: 'natural',
+                },
+            ],
+            'perfectionist/sort-named-imports': [
+                'error',
+                {
+                    order: 'asc',
+                    type: 'natural',
+                },
+            ],
+            'perfectionist/sort-object-types': [
+                'error',
+                {
+                    customGroups: [],
+                    groups: [],
+                    ignoreCase: true,
+                    ignorePattern: [],
+                    newlinesBetween: 'ignore',
+                    order: 'asc',
+                    partitionByComment: false,
+                    partitionByNewLine: false,
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                },
+            ],
+            'perfectionist/sort-objects': [
+                'error',
+                {
+                    customGroups: {},
+                    destructuredObjects: true,
+                    groups: [],
+                    ignoreCase: true,
+                    ignorePattern: [],
+                    newlinesBetween: 'ignore',
+                    objectDeclarations: true,
+                    order: 'asc',
+                    partitionByComment: false,
+                    partitionByNewLine: false,
+                    specialCharacters: 'keep',
+                    styledComponents: true,
+                    type: 'alphabetical',
+                    useConfigurationIf: {},
+                },
+            ],
+            'perfectionist/sort-sets': [
+                'error',
+                {
+                    customGroups: [],
+                    groupKind: 'literals-first',
+                    groups: [],
+                    ignoreCase: true,
+                    order: 'asc',
+                    partitionByNewLine: false,
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                    useConfigurationIf: {},
+                },
+            ],
+            'perfectionist/sort-switch-case': [
+                'error',
+                {
+                    ignoreCase: true,
+                    order: 'asc',
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                },
+            ],
+            'perfectionist/sort-union-types': [
+                'error',
+                {
+                    groups: [],
+                    ignoreCase: true,
+                    newlinesBetween: 'ignore',
+                    order: 'asc',
+                    partitionByComment: false,
+                    partitionByNewLine: false,
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                },
+            ],
+            'perfectionist/sort-variable-declarations': [
+                'error',
+                {
+                    ignoreCase: true,
+                    order: 'asc',
+                    partitionByComment: false,
+                    partitionByNewLine: false,
+                    specialCharacters: 'keep',
+                    type: 'alphabetical',
+                },
+            ],
+            'react/jsx-uses-react': 'off',
+            'react/react-in-jsx-scope': 'off',
+            'unused-imports/no-unused-imports': 'error',
+            'unused-imports/no-unused-vars': [
+                'warn',
+                {
+                    args: 'after-used',
+                    argsIgnorePattern: '^_',
+                    vars: 'all',
+                    varsIgnorePattern: '^_',
+                },
+            ],
+        },
+    },
+    eslintConfigPrettier,
+]
