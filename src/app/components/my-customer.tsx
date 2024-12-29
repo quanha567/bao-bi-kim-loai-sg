@@ -26,7 +26,7 @@ export const MyCustomer = () => {
                     <span className="font-bold">KHÁCH HÀNG </span>
                     luôn là người bạn đồng hành của <span className="font-bold">SAMEPACK</span>
                 </Typography>
-                <div className="my-6 h-[1px] w-full max-w-lg bg-[#808080]"></div>
+                <div className="my-6 h-[1px] w-full max-w-xs bg-[#808080] lg:max-w-lg"></div>
             </div>
             <div className="relative flex overflow-hidden">
                 <motion.div
@@ -46,7 +46,7 @@ export const MyCustomer = () => {
                                     src={src}
                                     key={`${i} - ${j}`}
                                     alt={`${i} - ${j}`}
-                                    className="h-32 w-auto flex-none object-contain"
+                                    className="h-20 w-auto flex-none object-contain lg:h-32"
                                 />
                             ))}
                         </React.Fragment>

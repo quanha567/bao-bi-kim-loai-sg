@@ -30,7 +30,7 @@ export const HomeCarousel = () => {
             <CarouselContent>
                 {[Banner, Article].map((src, index) => (
                     <CarouselItem key={index}>
-                        <div className="aspect-[21/9]">
+                        <div className="aspect-video lg:aspect-[21/9]">
                             <Image src={src} alt="banner" className="h-full w-full object-cover" />
                         </div>
                     </CarouselItem>

@@ -19,7 +19,7 @@ html,
         --card-foreground: 222.2 84% 4.9%;
         --popover: 0 0% 100%;
         --popover-foreground: 222.2 84% 4.9%;
-        --primary: 264, 66.5%, 30.4%;
+        --primary: 264 66.5% 30.4%;
         --primary-foreground: 210 40% 98%;
         --secondary: 210 40% 96.1%;
         --secondary-foreground: 222.2 47.4% 11.2%;
@@ -80,4 +80,10 @@ html,
     .paused {
         animation-play-state: paused;
     }
+}
+
+.bg-circle {
+    background-image: url('../public/db-circle-bg.svg');
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
 }

@@ -1,33 +1,50 @@
 import { Mail, MapPin, PhoneCall } from 'lucide-react'
 
+import Link from 'next/link'
+
 import { Typography } from '@/components'
 
-export const HeaderContact = () => {
+import { formatVietnamesePhoneNumber, getLink } from '@/lib'
+
+import { DefaultHeaderProps } from './default-header'
+
+type HeaderContactProps = DefaultHeaderProps
+
+export const HeaderContact = ({ address, mail, phoneNumber }: HeaderContactProps) => {
     return (
-        <div className="bg-primary py-2">
+        <div className="hidden bg-primary py-2 lg:block">
             <div className="container flex items-center justify-between text-white">
-                <div className="flex flex-1 items-center gap-1">
+                <Link
+                    href={getLink('maps', address)}
+                    className="flex flex-1 items-center gap-1 hover:underline"
+                >
                     <MapPin size={16} />
                     <Typography
                         as="span"
                         className="line-clamp-1 flex-1 text-xs font-medium uppercase"
                     >
-                        368/77O Tôn Đản, Phường 04, Quận 4, Thành phố Hồ Chí Minh, Việt Nam
+                        {address}
                     </Typography>
-                </div>
+                </Link>
                 <div className="divide-x-white flex items-center divide-x-[1px]">
-                    <div className="flex items-center gap-1 pr-2">
+                    <Link
+                        href={getLink('phone', phoneNumber)}
+                        className="flex items-center gap-1 pr-2 hover:underline"
+                    >
                         <PhoneCall size={16} />
                         <Typography as="span" className="text-xs font-medium">
-                            090 320 7911
+                            {formatVietnamesePhoneNumber(phoneNumber)}
                         </Typography>
-                    </div>
-                    <div className="flex items-center gap-1 pl-2">
+                    </Link>
+                    <Link
+                        href={getLink('mail', mail)}
+                        className="flex items-center gap-1 pl-2 hover:underline"
+                    >
                         <Mail size={16} />
                         <Typography as="span" className="text-xs font-medium">
-                            baobikimloaisaigon.com
+                            {mail}
                         </Typography>
-                    </div>
+                    </Link>
                 </div>
             </div>
         </div>

@@ -24,7 +24,7 @@ export const SuccessStory = () => {
     ]
 
     return (
-        <div className="container flex flex-col items-center py-10">
+        <div className="container flex flex-col items-center py-6 lg:py-10">
             <Typography
                 as="h2"
                 variant="h2"
@@ -40,7 +40,7 @@ export const SuccessStory = () => {
                     className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F8F8F8] px-4"
                 />
             </div>
-            <div className="mt-10 grid grid-cols-3 gap-8">
+            <div className="mt-4 grid gap-4 lg:mt-10 lg:grid-cols-3 lg:gap-8">
                 {stories.map((story, index) => (
                     <div key={index} className="relative overflow-hidden rounded-lg">
                         <Image

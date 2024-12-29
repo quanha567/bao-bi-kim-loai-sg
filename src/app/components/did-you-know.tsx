@@ -36,15 +36,15 @@ export const DidYouKnow = () => {
                 <Typography as="h3" variant="h3" className="mt-2 font-normal">
                     Điều gì tạo nên sự khác biệt của chúng tôi?
                 </Typography>
-                <div className="mt-6 h-[1px] w-full max-w-[500px] bg-[#808080]"></div>
+                <div className="mt-2 h-[1px] w-3/4 max-w-[500px] bg-[#808080] lg:mt-6 lg:w-full"></div>
             </div>
-            <div className="grid grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
                 {reasons.map((reason, index) => (
                     <div
                         key={index}
                         className="flex cursor-pointer flex-col items-center gap-2 transition-all hover:-translate-y-2"
                     >
-                        <div className="aspect-square w-1/2 overflow-hidden rounded-lg border">
+                        <div className="aspect-square w-3/4 overflow-hidden rounded-lg border lg:w-1/2">
                             <Image
                                 alt="reason"
                                 src={reason.img}

@@ -1,3 +1,4 @@
+export * from './company-overview'
 export * from './did-you-know'
 export * from './home-carousel'
 export * from './my-customer'
