@@ -2,8 +2,11 @@ import type { Metadata } from 'next'
 
 import { Montserrat } from 'next/font/google'
 
-import './globals.css'
 import { AdminLayout } from '@/layouts'
+
+import './globals.css'
+
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 const geistSans = Montserrat({
     subsets: ['latin'],
@@ -25,6 +28,7 @@ export default function RootLayout({
         <html lang="vi">
             <body className={`${geistSans.variable} bg-[#F8F8F8] antialiased`}>
                 <AdminLayout>{children}</AdminLayout>
+                <SpeedInsights />
             </body>
         </html>
     )
