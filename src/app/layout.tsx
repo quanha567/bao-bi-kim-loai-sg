@@ -3,8 +3,7 @@ import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
 
 import './globals.css'
-
-import { DefaultLayout } from '@/layouts'
+import { AdminLayout } from '@/layouts'
 
 const geistSans = Montserrat({
     subsets: ['latin'],
@@ -25,7 +24,7 @@ export default function RootLayout({
     return (
         <html lang="vi">
             <body className={`${geistSans.variable} bg-[#F8F8F8] antialiased`}>
-                <DefaultLayout>{children}</DefaultLayout>
+                <AdminLayout>{children}</AdminLayout>
             </body>
         </html>
     )

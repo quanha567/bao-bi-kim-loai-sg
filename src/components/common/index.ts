@@ -1,1 +1,2 @@
-export * from "./typography";
+export * from './custom-table'
+export * from './typography'
