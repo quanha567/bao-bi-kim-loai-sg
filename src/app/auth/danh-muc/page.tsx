@@ -25,7 +25,7 @@ import { CategoryModel } from '@/models'
 import { ApiListResponse } from '@/types/api.type'
 
 const fetchCategories = async () => {
-    const response = await fetch('https://baobikimloaisg.vercel.app/api/categories')
+    const response = await fetch('api/categories')
     if (!response.ok) {
         throw new Error('Failed to fetch categories')
     }

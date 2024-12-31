@@ -4,6 +4,24 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import { prisma } from '@/db'
 
+export async function DELETE(req: NextRequest) {
+    const { searchParams } = new URL(req.url)
+    const ids = searchParams.getAll('ids')
+    try {
+        const category = await prisma.category.deleteMany({
+            where: {
+                id: {
+                    in: ids,
+                },
+            },
+        })
+        return NextResponse.json(category, { status: 200 })
+    } catch (error) {
+        console.log('🚀 -> DELETE -> error:', error)
+        return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
+    }
+}
+
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url)
 
@@ -23,26 +41,18 @@ export async function GET(req: NextRequest) {
             skip,
             take,
             where: {
-                OR: [
-                    {
-                        name: {
-                            contains: searchText,
-                            mode: 'insensitive',
-                        },
-                    },
-                ],
+                name: {
+                    contains: searchText,
+                    mode: 'insensitive',
+                },
             },
         })
         const total = await prisma.category.count({
             where: {
-                OR: [
-                    {
-                        name: {
-                            contains: searchText,
-                            mode: 'insensitive',
-                        },
-                    },
-                ],
+                name: {
+                    contains: searchText,
+                    mode: 'insensitive',
+                },
             },
         })
 
@@ -59,12 +69,43 @@ export async function GET(req: NextRequest) {
             },
         )
     } catch (error) {
-        console.error('Error fetching categories:', error)
-        return NextResponse.json(
-            { error: 'Error fetching categories' },
-            {
-                status: 500,
+        console.log('🚀 -> GET -> error:', error)
+        return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
+    }
+}
+
+export async function POST(req: NextRequest) {
+    const { name, slug } = await req.json()
+    try {
+        const category = await prisma.category.create({
+            data: {
+                name,
+                slug,
             },
-        )
+        })
+        return NextResponse.json(category, { status: 201 })
+    } catch (error) {
+        console.log('🚀 -> POST -> error:', error)
+        return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
+    }
+}
+
+export async function PUT(req: NextRequest) {
+    const { id, name, slug } = await req.json()
+
+    try {
+        const category = await prisma.category.update({
+            data: {
+                name,
+                slug,
+            },
+            where: {
+                id,
+            },
+        })
+        return NextResponse.json(category, { status: 200 })
+    } catch (error) {
+        console.log('🚀 -> PUT -> error:', error)
+        return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
     }
 }
