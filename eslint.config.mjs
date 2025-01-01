@@ -297,6 +297,8 @@ export default [
                     varsIgnorePattern: '^_',
                 },
             ],
+            'no-unused-expressions': 'off',
+            '@typescript-eslint/no-unused-expressions': 'off',
         },
     },
     eslintConfigPrettier,

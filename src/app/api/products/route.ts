@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { prisma } from '@/db'
-import { categoryService } from '@/services'
+import { ProductModel, ProductModel } from '@/models'
+import { categoryService, imageService, productService } from '@/services'
 
 export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url)
@@ -11,7 +11,7 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json({ error: 'Missing ids' }, { status: 400 })
         }
 
-        const category = await categoryService.deleteCategories(ids)
+        const category = await productService.deleteProducts(ids)
         return NextResponse.json(category, { status: 200 })
     } catch (error) {
         console.log('🚀 -> DELETE -> error:', error)
@@ -20,18 +20,11 @@ export async function DELETE(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-    const { id, name, slug } = await req.json()
+    const data = (await req.json()) as ProductModel
 
     try {
-        const category = await prisma.category.update({
-            data: {
-                name,
-                slug,
-            },
-            where: {
-                id,
-            },
-        })
+        const category = await productService.updateProduct(data)
+
         return NextResponse.json(category, { status: 200 })
     } catch (error) {
         console.log('🚀 -> PUT -> error:', error)
@@ -40,20 +33,33 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-    const { name, slug } = await req.json()
+    const formData = await req.formData()
+    const data = formData.get('data')
+    const file = formData.get('file')
+
+    if (!data) {
+        return NextResponse.json({ error: 'Missing data' }, { status: 400 })
+    }
+
+    const productData = JSON.parse(data as string) as ProductModel
+
+    const { name, slug } = productData
+
     let validateSlug = slug
+
     try {
         if (!validateSlug) {
             // Generate slug if not provided
             validateSlug = await categoryService.generateSlug(name)
         }
 
-        // check if slug is already exist
-        // while (await categoryService.checkIsExistSlug(validateSlug)) {
-        //     validateSlug = `${validateSlug}-${Math.floor(Math.random() * 1000)}`
-        // }
+        if (file) {
+            const imageResponse = await imageService.uploadImage(file as File)
+            productData.image = imageResponse.url
+        }
 
-        const category = await categoryService.createCategory(name, validateSlug)
+        productData.slug = validateSlug
+        const category = await productService.createProduct(productData)
 
         return NextResponse.json(category, { status: 201 })
     } catch (error) {

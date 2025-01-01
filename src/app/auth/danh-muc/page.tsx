@@ -1,6 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { SaveIcon } from 'lucide-react'
+import { useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+
+import { z } from 'zod'
 
 import {
     AddButton,
@@ -8,49 +12,69 @@ import {
     ColumnType,
     CustomTable,
     DeleteButton,
-    Input,
-    Label,
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetFooter,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    FormInput,
+    ModalConfirm,
     TableButtonWrapper,
     UpdateButton,
 } from '@/components'
 
+import {
+    useCreateCategory,
+    useDeleteCategory,
+    useDisclosure,
+    useGetCategories,
+    useToast,
+    useUpdateCategory,
+} from '@/hooks'
 import { CategoryModel } from '@/models'
-import { ApiListResponse } from '@/types/api.type'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-const fetchCategories = async () => {
-    const response = await fetch('api/categories')
-    if (!response.ok) {
-        throw new Error('Failed to fetch categories')
-    }
-    return response.json()
+const initialValues: Partial<CategoryModel> = {
+    name: '',
+    slug: '',
 }
 
-const AdminCategoryPage = () => {
-    const [categories, setCategories] = useState<ApiListResponse<CategoryModel> | null>(null)
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<null | string>(null)
+const formSchema = z.object({
+    name: z.string().nonempty('Tên danh mục không được để trống'),
+    slug: z.string(),
+    id: z.string().optional(),
+})
 
-    useEffect(() => {
-        const loadCategories = async () => {
-            try {
-                const data = await fetchCategories()
-                setCategories(data)
-            } catch (err) {
-                setError('Error loading categories')
-                console.error(err)
-            } finally {
-                setLoading(false)
-            }
-        }
-        loadCategories()
-    }, [])
+const AdminCategoryPage = () => {
+    const form = useForm<CategoryModel>({
+        defaultValues: initialValues,
+        resolver: zodResolver(formSchema),
+    })
+
+    const { toast } = useToast()
+
+    const [categoryIds, setCategoryIds] = useState<string[]>([])
+
+    const [isDialogOpen, { toggle: toggleDialog }] = useDisclosure(false, {
+        onClose: () => {
+            form.reset()
+        },
+    })
+
+    const [isModalDeleteOpen, { toggle: toggleModalDelete }] = useDisclosure(false)
+
+    const {
+        data: categoriesData,
+        isLoading: isLoadingCategories,
+        refetch: fetchCategories,
+    } = useGetCategories()
+
+    const { mutate: updateCategory, isPending: isUpdatingCategory } = useUpdateCategory()
+
+    const { mutate: createCategory, isPending: isCreatingCategory } = useCreateCategory()
+
+    const { mutate: deleteCategory, isPending: isDeletingCategory } = useDeleteCategory()
 
     const columns: ColumnType<CategoryModel> = [
         {
@@ -68,65 +92,145 @@ const AdminCategoryPage = () => {
             label: 'Chức năng',
             render: (data) => (
                 <TableButtonWrapper>
-                    <UpdateButton />
-                    <DeleteButton />
+                    <UpdateButton onClick={() => openUpdateDialog(data)} />
+                    <DeleteButton onClick={() => handleOpenDeleteModal(data.id)} />
                 </TableButtonWrapper>
             ),
         },
     ]
 
-    if (loading) {
-        return <div>Loading...</div>
+    const openUpdateDialog = (data: CategoryModel) => {
+        form.setValue('id', data.id, { shouldDirty: true })
+        form.setValue('name', data.name, { shouldDirty: true })
+        form.setValue('slug', data.slug, { shouldDirty: true })
+        toggleDialog()
     }
 
-    if (error) {
-        return <div>Error: {error}</div>
+    const handleSubmitForm = async (data: CategoryModel) => {
+        console.log('handleSubmitForm  data:', data)
+        try {
+            if (data.id) {
+                updateCategory(data, {
+                    onSuccess: async () => {
+                        await fetchCategories()
+                        toggleDialog()
+                        form.reset()
+                        toast({
+                            title: 'Cập nhật danh mục thành công!',
+                            variant: 'success',
+                        })
+                    },
+                    onError: (error) => {
+                        toast({
+                            title: error.message,
+                            variant: 'destructive',
+                        })
+                    },
+                })
+                return
+            }
+
+            createCategory(data, {
+                onSuccess: async () => {
+                    await fetchCategories()
+                    toggleDialog()
+                    form.reset()
+                    toast({
+                        title: 'Thêm danh mục thành công!',
+                        variant: 'success',
+                    })
+                },
+                onError: (error) => {
+                    toast({
+                        title: error.message,
+                        variant: 'destructive',
+                    })
+                },
+            })
+        } catch (error) {
+            console.log('handleSubmitForm  error:', error)
+            toast({
+                title: 'Có lỗi xảy ra',
+                variant: 'destructive',
+            })
+        }
+    }
+
+    const handleDeleteCategory = async () => {
+        if (categoryIds.length === 0) {
+            return
+        }
+
+        deleteCategory(categoryIds, {
+            onSuccess: async () => {
+                await fetchCategories()
+                toggleModalDelete()
+                toast({
+                    title: 'Xóa danh mục thành công!',
+                    variant: 'success',
+                })
+            },
+            onError: (error) => {
+                toast({
+                    title: error.message,
+                    variant: 'destructive',
+                })
+            },
+        })
+    }
+
+    const handleOpenDeleteModal = (ids: string | string[]) => {
+        setCategoryIds(typeof ids === 'string' ? [ids] : ids)
+        toggleModalDelete()
     }
 
     return (
-        <div className="p-4">
-            <Sheet>
-                <CustomTable
-                    rowKey={'id'}
-                    columns={columns}
-                    data={categories?.data || []}
-                    tableName="Danh sách danh mục"
-                    pageSize={categories?.pageSize || 0}
-                    pageIndex={categories?.pageIndex || 0}
-                    totalPages={categories?.totalPages || 0}
-                    totalElements={categories?.totalElements || 0}
-                    extraButtons={
-                        <SheetTrigger asChild>
-                            <AddButton>Thêm danh mục</AddButton>
-                        </SheetTrigger>
-                    }
-                />
-                <SheetContent>
-                    <SheetHeader>
-                        <SheetTitle>Thêm danh mục sản phẩm</SheetTitle>
-                    </SheetHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                                Tên
-                            </Label>
-                            <Input id="name" className="col-span-3" value="Nhập tên danh mục..." />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="username" className="text-right">
-                                Username
-                            </Label>
-                            <Input id="username" value="@peduarte" className="col-span-3" />
-                        </div>
+        <>
+            <CustomTable
+                rowKey={'id'}
+                columns={columns}
+                tableName="Danh sách danh mục"
+                isLoading={isLoadingCategories}
+                data={categoriesData?.data || []}
+                pageSize={categoriesData?.pageSize || 0}
+                pageIndex={categoriesData?.pageIndex || 0}
+                totalPages={categoriesData?.totalPages || 0}
+                totalElements={categoriesData?.totalElements || 0}
+                extraButtons={<AddButton onClick={toggleDialog}>Thêm danh mục</AddButton>}
+            />
+            <Dialog open={isDialogOpen} onOpenChange={toggleDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Thêm danh mục</DialogTitle>
+                        <DialogDescription></DialogDescription>
+                    </DialogHeader>
+                    <div>
+                        <FormProvider {...form}>
+                            <FormInput isRequired name="name" label="Tên danh mục" />
+                            <FormInput name="slug" label="Slug" />
+                        </FormProvider>
                     </div>
-                    <SheetFooter>
-                        <SheetClose asChild>
-                            <Button type="submit">Lưu</Button>
-                        </SheetClose>
-                    </SheetFooter>
-                </SheetContent>
-            </Sheet>
-        </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={toggleDialog}>
+                            Hủy
+                        </Button>
+                        <Button
+                            onClick={form.handleSubmit(handleSubmitForm)}
+                            isLoading={isCreatingCategory || isUpdatingCategory}
+                        >
+                            <SaveIcon />
+                            Lưu
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+            <ModalConfirm
+                isOpen={isModalDeleteOpen}
+                onClose={toggleModalDelete}
+                isLoading={isDeletingCategory}
+                onConfirm={handleDeleteCategory}
+            />
+        </>
     )
 }
 

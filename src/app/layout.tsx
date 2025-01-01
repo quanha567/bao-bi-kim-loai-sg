@@ -6,7 +6,7 @@ import { AdminLayout } from '@/layouts'
 
 import './globals.css'
 
-import { SpeedInsights } from '@vercel/speed-insights/next'
+import { UIProvider } from '@/providers'
 
 const geistSans = Montserrat({
     subsets: ['latin'],
@@ -27,8 +27,9 @@ export default function RootLayout({
     return (
         <html lang="vi">
             <body className={`${geistSans.variable} bg-[#F8F8F8] antialiased`}>
-                <AdminLayout>{children}</AdminLayout>
-                <SpeedInsights />
+                <UIProvider>
+                    <AdminLayout>{children}</AdminLayout>
+                </UIProvider>
             </body>
         </html>
     )

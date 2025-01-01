@@ -18,17 +18,20 @@ import {
 } from '@/components'
 
 import { ADMIN_PATH } from '@/constants'
+import { QueryProvider } from '@/providers'
 import Logo from '@/public/logo.jpg'
 
 export const AdminLayout = ({ children }: React.PropsWithChildren) => {
     return (
         <SidebarProvider>
             <AppSidebar />
-            <main className="w-full">
+            <main className="flex h-screen w-full flex-col">
                 <div className="bg-background px-4 py-2">
                     <SidebarTrigger />
                 </div>
-                {children}
+                <QueryProvider>
+                    <div className="flex-1 overflow-auto bg-zinc-200 p-4">{children}</div>
+                </QueryProvider>
             </main>
         </SidebarProvider>
     )
@@ -68,7 +71,7 @@ const items = [
 ]
 export function AppSidebar() {
     return (
-        <Sidebar>
+        <Sidebar className="bg-white">
             <SidebarHeader>
                 <Image src={Logo} alt="logo" className="w-3/5 object-contain" />
             </SidebarHeader>

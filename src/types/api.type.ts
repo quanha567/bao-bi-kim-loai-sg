@@ -5,3 +5,5 @@ export interface ApiListResponse<T> {
     totalElements: number
     totalPages: number
 }
+
+export type SearchParams = Record<string, unknown>

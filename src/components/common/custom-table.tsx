@@ -5,8 +5,10 @@ import {
     BadgePlus,
     ChevronDown,
     ChevronUp,
+    Database,
     Ellipsis,
     List,
+    Loader,
     PencilLine,
     RotateCw,
     TableIcon,
@@ -26,6 +28,7 @@ import {
 } from '@/components/ui/table'
 
 import { useSearch } from '@/hooks'
+import { cn } from '@/lib'
 
 import {
     Pagination,
@@ -42,15 +45,25 @@ import {
 import { Typography } from './typography'
 
 export type ColumnType<T> = {
+    align?: 'center' | 'left' | 'right'
+    className?: string
     key: keyof T
     label: ReactNode
     render?: (data: T) => ReactNode
     sortable?: boolean
 }[]
+
+const alignClass = {
+    center: 'text-center',
+    left: 'text-left',
+    right: 'text-right',
+}
+
 interface CustomTableProps<T> {
     columns: ColumnType<T>
     data: T[]
     extraButtons?: ReactNode | ReactNode[]
+    isLoading?: boolean
     onPaginationChange?: (page: number) => void
     onRefresh?: () => Promise<unknown>
     onRowClick?: (id: T[keyof T]) => void
@@ -79,6 +92,7 @@ export const CustomTable = <T,>({
     tableName,
     totalElements = 0,
     totalPages = 0,
+    isLoading,
 }: CustomTableProps<T>) => {
     const { ascending, handleSortChange, sortColumn } = useSearch({
         initialSortColumn: null,
@@ -195,8 +209,11 @@ export const CustomTable = <T,>({
                             {columns.map((col) => (
                                 <TableHead
                                     key={String(col.key)}
-                                    className="relative cursor-pointer text-center font-bold"
                                     onClick={() => col.sortable && handleSort(String(col.key))}
+                                    className={cn(
+                                        'relative cursor-pointer text-center font-bold',
+                                        alignClass[col.align || 'left'],
+                                    )}
                                     title={
                                         col.sortable
                                             ? `Sắp xếp theo ${ascending ? 'giảm dần' : 'tăng dần'}`
@@ -230,36 +247,66 @@ export const CustomTable = <T,>({
                             ))}
                         </TableRow>
                     </TableHeader>
-                    <TableBody className="border-b border-gray-300 text-center">
-                        {data.map((item: T) => (
-                            <TableRow
-                                key={String(item[rowKey])}
-                                onClick={() => onRowClick && onRowClick(item[rowKey])}
-                                className="divide-x-[1px] border-b border-gray-300 hover:bg-transparent"
-                            >
-                                <TableCell className="text-center font-medium">
-                                    {pageIndex * pageSize + data.indexOf(item) + 1}
+                    <TableBody className="border-b border-gray-300">
+                        {isLoading ? (
+                            <TableRow>
+                                <TableCell colSpan={columns.length + 1 + (showCheckbox ? 1 : 0)}>
+                                    <div className="flex flex-col items-center justify-center gap-2 p-10">
+                                        <Loader size={40} className="animate-spin" />
+                                        <Typography className="font-medium">
+                                            Đang tải dữ liệu...
+                                        </Typography>
+                                    </div>
                                 </TableCell>
-                                {showCheckbox && (
-                                    <TableCell
-                                        className="text-center font-medium"
-                                        onClick={(e) => e.stopPropagation()}
-                                    >
-                                        <Checkbox
-                                            checked={selectedCheckboxes.has(item[rowKey])}
-                                            onCheckedChange={() =>
-                                                handleCheckboxChange(item[rowKey])
-                                            }
-                                        />
-                                    </TableCell>
-                                )}
-                                {columns.map((col) => (
-                                    <TableCell key={`${String(item[rowKey])}-${String(col.key)}`}>
-                                        {col?.render?.(item) || (item[col.key] as ReactNode)}
-                                    </TableCell>
-                                ))}
                             </TableRow>
-                        ))}
+                        ) : !data?.length ? (
+                            <TableRow className="hover:bg-transparent">
+                                <TableCell colSpan={columns.length + 1 + (showCheckbox ? 1 : 0)}>
+                                    <div className="flex flex-col items-center justify-center gap-2 p-10">
+                                        <Database size={40} />
+                                        <Typography className="font-medium">
+                                            Không có dữ liệu
+                                        </Typography>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            data.map((item: T) => (
+                                <TableRow
+                                    key={String(item[rowKey])}
+                                    onClick={() => onRowClick && onRowClick(item[rowKey])}
+                                    className="divide-x-[1px] border-b border-gray-300 hover:bg-transparent"
+                                >
+                                    <TableCell className="text-center font-medium">
+                                        {pageIndex * pageSize + data.indexOf(item) + 1}
+                                    </TableCell>
+                                    {showCheckbox && (
+                                        <TableCell
+                                            className="text-center font-medium"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <Checkbox
+                                                checked={selectedCheckboxes.has(item[rowKey])}
+                                                onCheckedChange={() =>
+                                                    handleCheckboxChange(item[rowKey])
+                                                }
+                                            />
+                                        </TableCell>
+                                    )}
+                                    {columns.map((col) => (
+                                        <TableCell
+                                            key={`${String(item[rowKey])}-${String(col.key)}`}
+                                            className={cn(
+                                                alignClass[col.align || 'left'],
+                                                col.className,
+                                            )}
+                                        >
+                                            {col?.render?.(item) || (item[col.key] as ReactNode)}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             ) : (
