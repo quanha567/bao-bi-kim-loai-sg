@@ -1,4 +1,5 @@
 export * from './api'
+export * from './use-debounce'
 export * from './use-disclosure'
 export * from './use-mobile'
 export * from './use-search'

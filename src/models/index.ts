@@ -1,3 +1,4 @@
+export * from './article.model'
 export * from './base.model'
 export * from './category.model'
 export * from './image.model'

@@ -147,7 +147,7 @@ export const CustomTable = <T,>({
     )
     const endPage = Math.min(totalPages, startPage + maxPagesToShow)
     const handlePageChangeWithPagination = (page: number) => {
-        if (page >= 0 && page < totalPages) {
+        if (page >= 0 && page < totalPages && page !== pageIndex) {
             onPaginationChange?.(page)
         }
     }

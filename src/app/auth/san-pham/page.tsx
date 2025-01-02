@@ -31,7 +31,9 @@ import {
     useCreateProduct,
     useDeleteProduct,
     useDisclosure,
+    useGetCategoryOptions,
     useGetProducts,
+    useSearch,
     useToast,
     useUpdateProduct,
 } from '@/hooks'
@@ -41,12 +43,26 @@ import { zodResolver } from '@hookform/resolvers/zod'
 const initialValues: Partial<ProductModel> = {
     name: '',
     slug: '',
+    category: {
+        id: '',
+        name: '',
+        products: [],
+        slug: '',
+        createdAt: '',
+        updatedAt: '',
+    },
+    image: undefined,
 }
 
 const formSchema = z.object({
     name: z.string().nonempty('Tên sản phẩm không được để trống'),
     slug: z.string(),
     id: z.string().optional(),
+    category: z.object({
+        id: z.string().nonempty('Danh mục không được để trống'),
+    }),
+    image: z.instanceof(Blob).optional(),
+    imageHover: z.instanceof(Blob).optional(),
 })
 
 const AdminProductPage = () => {
@@ -55,15 +71,13 @@ const AdminProductPage = () => {
         resolver: zodResolver(formSchema),
     })
 
+    const { pageIndex, pageSize, searchText, handlePaginationChange } = useSearch({})
+
     const { toast } = useToast()
 
     const [productIds, setProductIds] = useState<string[]>([])
 
-    const [isDialogOpen, { toggle: toggleDialog }] = useDisclosure(false, {
-        onClose: () => {
-            form.reset()
-        },
-    })
+    const [isDialogOpen, { toggle: toggleDialog }] = useDisclosure(false)
 
     const [isModalDeleteOpen, { toggle: toggleModalDelete }] = useDisclosure(false)
 
@@ -71,7 +85,20 @@ const AdminProductPage = () => {
         data: productsData,
         isLoading: isLoadingProducts,
         refetch: fetchProducts,
-    } = useGetProducts()
+    } = useGetProducts({
+        pageIndex,
+        pageSize,
+        searchText,
+    })
+
+    const {
+        categoryOptions,
+        categorySearchText,
+        isLoadingCategoryOptions,
+        loadMoreCategoryOptions,
+        setCategorySearchText,
+        isFetchingNextPageCategoryOptions,
+    } = useGetCategoryOptions()
 
     const { mutate: updateProduct, isPending: isUpdatingProduct } = useUpdateProduct()
 
@@ -83,11 +110,36 @@ const AdminProductPage = () => {
         {
             key: 'image',
             label: 'Hình ảnh',
-            render: (data) =>
-                data.image && typeof data.image === 'string' ? (
-                    <Image width={50} height={50} alt={data.name} src={data.image} />
-                ) : null,
-            align: 'center',
+            render: (data) => (
+                <div className="size-[50px]">
+                    {data.image && typeof data.image === 'string' ? (
+                        <Image
+                            width={50}
+                            height={50}
+                            alt={data.name}
+                            src={data.image}
+                            className="!h-full !w-full object-cover"
+                        />
+                    ) : null}
+                </div>
+            ),
+        },
+        {
+            key: 'imageHover',
+            label: 'Hình ảnh thay thế',
+            render: (data) => (
+                <div className="size-[50px]">
+                    {data.imageHover && typeof data.imageHover === 'string' ? (
+                        <Image
+                            width={50}
+                            height={50}
+                            alt={data.name}
+                            src={data.imageHover}
+                            className="!h-full !w-full object-cover"
+                        />
+                    ) : null}
+                </div>
+            ),
         },
         {
             key: 'name',
@@ -112,9 +164,7 @@ const AdminProductPage = () => {
     ]
 
     const openUpdateDialog = (data: ProductModel) => {
-        form.setValue('id', data.id, { shouldDirty: true })
-        form.setValue('name', data.name, { shouldDirty: true })
-        form.setValue('slug', data.slug, { shouldDirty: true })
+        form.reset({ ...data })
         toggleDialog()
     }
 
@@ -201,13 +251,14 @@ const AdminProductPage = () => {
             <CustomTable
                 rowKey={'id'}
                 columns={columns}
+                pageSize={pageSize}
+                pageIndex={pageIndex}
                 onRefresh={fetchProducts}
                 isLoading={isLoadingProducts}
                 tableName="Danh sách sản phẩm"
                 data={productsData?.data || []}
-                pageSize={productsData?.pageSize || 0}
-                pageIndex={productsData?.pageIndex || 0}
                 totalPages={productsData?.totalPages || 0}
+                onPaginationChange={handlePaginationChange}
                 totalElements={productsData?.totalElements || 0}
                 extraButtons={<AddButton onClick={toggleDialog}>Thêm sản phẩm</AddButton>}
             />
@@ -219,9 +270,24 @@ const AdminProductPage = () => {
                     </DialogHeader>
                     <div>
                         <FormProvider {...form}>
-                            <FormUpload name="image" label="Hình ảnh" />
+                            <div className="grid grid-cols-2 gap-2">
+                                <FormUpload name="image" label="Hình ảnh" />
+                                <FormUpload name="imageHover" label="Hình ảnh thay thế" />
+                            </div>
                             <FormInput isRequired name="name" label="Tên sản phẩm" />
-                            <FormSelect isRequired label="Danh mục" name="category.id" />
+                            <FormSelect
+                                searchable
+                                isRequired
+                                label="Danh mục"
+                                name="category.id"
+                                options={categoryOptions}
+                                searchValue={categorySearchText}
+                                isLoading={isLoadingCategoryOptions}
+                                onLoadMore={loadMoreCategoryOptions}
+                                onSearchChange={setCategorySearchText}
+                                searchPlaceholder="Tìm kiếm danh mục..."
+                                isLoadingMore={isFetchingNextPageCategoryOptions}
+                            />
                             <FormInput name="slug" label="Slug" />
                         </FormProvider>
                     </div>

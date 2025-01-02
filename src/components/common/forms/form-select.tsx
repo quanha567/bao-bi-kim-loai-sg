@@ -1,5 +1,6 @@
 'use client'
 
+import { Loader } from 'lucide-react'
 import { ReactNode } from 'react'
 import { Path, useFormContext } from 'react-hook-form'
 
@@ -10,6 +11,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
+    Input,
     Select,
     SelectContent,
     SelectGroup,
@@ -20,11 +22,18 @@ import {
 
 interface FormSelectProps<T> {
     description?: ReactNode
+    isLoading?: boolean
+    isLoadingMore?: boolean
     isRequired?: boolean
     label: string
     name: Path<T>
+    onLoadMore?: () => void
+    onSearchChange?: (value: string) => void
     options: SelectOption[]
     placeholder?: string
+    searchable?: boolean
+    searchPlaceholder?: string
+    searchValue?: string
 }
 
 type SelectOption = {
@@ -39,6 +48,13 @@ export const FormSelect = <TFormValues extends Record<string, unknown>>({
     isRequired,
     placeholder,
     options = [],
+    searchValue,
+    searchable,
+    isLoading,
+    isLoadingMore,
+    onSearchChange,
+    onLoadMore,
+    searchPlaceholder,
 }: FormSelectProps<TFormValues>) => {
     const form = useFormContext<TFormValues>()
 
@@ -54,17 +70,40 @@ export const FormSelect = <TFormValues extends Record<string, unknown>>({
                     </FormLabel>
                     <FormControl>
                         <Select value={field.value as string} onValueChange={field.onChange}>
-                            <SelectTrigger className="w-full">
+                            <SelectTrigger className="w-full" disabled={isLoading}>
                                 <SelectValue placeholder={placeholder} />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectGroup>
+                                {searchable && (
+                                    <Input
+                                        value={searchValue}
+                                        placeholder={searchPlaceholder}
+                                        onChange={(e) => onSearchChange?.(e.target.value)}
+                                    />
+                                )}
+                                <SelectGroup
+                                    className="max-h-44 overflow-y-auto"
+                                    onScroll={(e) => {
+                                        if (
+                                            e.currentTarget.scrollHeight -
+                                                e.currentTarget.scrollTop ===
+                                            e.currentTarget.clientHeight
+                                        ) {
+                                            onLoadMore?.()
+                                        }
+                                    }}
+                                >
                                     {options.map((option) => (
                                         <SelectItem key={option.value} value={option.value}>
                                             {option.label}
                                         </SelectItem>
                                     ))}
                                 </SelectGroup>
+                                {isLoadingMore && (
+                                    <div className="flex justify-center py-1">
+                                        <Loader className="animate-spin" />
+                                    </div>
+                                )}
                             </SelectContent>
                         </Select>
                     </FormControl>

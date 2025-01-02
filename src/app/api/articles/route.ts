@@ -12,8 +12,8 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json({ error: 'Missing ids' }, { status: 400 })
         }
 
-        const product = await productService.deleteProducts(ids)
-        return NextResponse.json(product, { status: 200 })
+        const category = await productService.deleteProducts(ids)
+        return NextResponse.json(category, { status: 200 })
     } catch (error) {
         console.log('🚀 -> DELETE -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
@@ -24,9 +24,9 @@ export async function PATCH(req: NextRequest) {
     const data = (await req.json()) as ProductModel
 
     try {
-        const product = await productService.updateProduct(data)
+        const category = await productService.updateProduct(data)
 
-        return NextResponse.json(product, { status: 200 })
+        return NextResponse.json(category, { status: 200 })
     } catch (error) {
         console.log('🚀 -> PUT -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
@@ -37,44 +37,34 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData()
     const data = formData.get('data')
     const image = formData.get('image')
-    const imageHover = formData.get('imageHover')
 
     if (!data) {
         return NextResponse.json({ error: 'Missing data' }, { status: 400 })
     }
 
     const productData = JSON.parse(data as string) as ProductModel
+
     const { name, slug } = productData
 
     let validateSlug = slug
 
     try {
         if (!validateSlug) {
+            // Generate slug if not provided
             validateSlug = await categoryService.generateSlug(name)
         }
 
-        productData.slug = validateSlug
-
-        // Start image uploads in parallel
-        const imageUploadPromises: Promise<any>[] = []
         if (image) {
-            imageUploadPromises.push(imageService.uploadImage(image as File))
-        }
-        if (imageHover) {
-            imageUploadPromises.push(imageService.uploadImage(imageHover as File))
+            const imageResponse = await imageService.uploadImage(image as File)
+            productData.image = imageResponse.url
         }
 
-        // Wait for all uploads
-        const [imageResponse, imageHoverResponse] = await Promise.all(imageUploadPromises)
+        productData.slug = validateSlug
+        const category = await productService.createProduct(productData)
 
-        // Update productData with uploaded image URLs
-        if (imageResponse) productData.image = imageResponse.url
-        if (imageHoverResponse) productData.imageHover = imageHoverResponse.url
-
-        const product = await productService.createProduct(productData)
-        return NextResponse.json(product, { status: 201 })
+        return NextResponse.json(category, { status: 201 })
     } catch (error) {
-        console.error('🚀 -> POST -> error:', error)
+        console.log('🚀 -> POST -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
     }
 }

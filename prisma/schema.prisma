@@ -35,3 +35,21 @@ model Product {
   images      String[]
   imageHover  String?
 }
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model Article {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  thumbnail String?
+  slug      String        @unique
+  tags      String[]
+  status    ArticleStatus @default(DRAFT)
+}

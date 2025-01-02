@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     const sortBy = searchParams.get('sortBy') || 'id'
 
     try {
-        const { products, total } = await productService.getProducts(
+        const { categories, total } = await productService.getProducts(
             pageIndex,
             pageSize,
             searchText,
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.json(
             {
-                data: products,
+                data: categories,
                 pageIndex,
                 pageSize,
                 totalElements: total,

@@ -32,7 +32,7 @@ export class BaseApi<T> {
         return response.data
     }
 
-    async update(id: string, data: Partial<T>): Promise<T> {
+    async update(data: Partial<T>): Promise<T> {
         const response = await this.client.patch<T>(this.endpoint, data)
         return response.data
     }

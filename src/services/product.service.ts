@@ -9,6 +9,7 @@ export const productService = {
         return prisma.product.create({
             data: {
                 ...rest,
+                image: typeof rest.image === 'string' ? rest.image : null,
                 category: {
                     connect: { id: category.id },
                 },
@@ -25,7 +26,7 @@ export const productService = {
     ) => {
         const skip = pageIndex * pageSize
 
-        const [categories, total] = await prisma.$transaction([
+        const [products, total] = await prisma.$transaction([
             prisma.product.findMany({
                 orderBy: {
                     [sortBy]: 'asc',
@@ -56,15 +57,27 @@ export const productService = {
             }),
             prisma.product.count({
                 where: {
-                    name: {
-                        contains: searchText,
-                        mode: 'insensitive',
-                    },
+                    OR: [
+                        {
+                            name: {
+                                contains: searchText,
+                                mode: 'insensitive',
+                            },
+                        },
+                        {
+                            category: {
+                                name: {
+                                    contains: searchText,
+                                    mode: 'insensitive',
+                                },
+                            },
+                        },
+                    ],
                 },
             }),
         ])
 
-        return { categories, total }
+        return { products, total }
     },
     updateProduct: async (data: ProductModel) => {
         const { category, ...rest } = data
@@ -72,6 +85,7 @@ export const productService = {
         return prisma.product.update({
             data: {
                 ...rest,
+                image: typeof rest.image === 'string' ? rest.image : null,
                 category: {
                     connect: { id: category.id },
                 },

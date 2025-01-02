@@ -1,15 +1,67 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 
 import { categoryApi } from '@/apiClient'
 import { QUERY_KEY } from '@/constants'
 import { CategoryModel } from '@/models'
 import { SearchParams } from '@/types'
 
+import { useDebounce } from '../use-debounce'
+
 export const useGetCategories = (params: SearchParams = {}) => {
     return useQuery({
         queryKey: [QUERY_KEY.CATEGORIES, params],
         queryFn: () => categoryApi.search(params),
     })
+}
+
+export const useGetCategoryOptions = () => {
+    const [categorySearchText, setCategorySearchText] = useState<string>('')
+
+    const categorySearchTextDebounce = useDebounce(categorySearchText)
+
+    const {
+        data: categories,
+        isLoading: isLoadingCategoryOptions,
+        isFetchingNextPage: isFetchingNextPageCategoryOptions,
+        hasNextPage: hasNextPageCategoryOptions,
+        fetchNextPage: fetchNextPageCategoryOptions,
+    } = useInfiniteQuery({
+        queryKey: [QUERY_KEY.CATEGORY_OPTIONS, categorySearchTextDebounce],
+        queryFn: ({ pageParam }) =>
+            categoryApi.search({
+                pageSize: 10,
+                pageIndex: pageParam,
+                searchText: categorySearchTextDebounce,
+            }),
+        getNextPageParam: ({ pageIndex, totalPages }) => {
+            return pageIndex + 1 < totalPages ? pageIndex + 1 : undefined
+        },
+        initialPageParam: 0,
+    })
+
+    const categoryOptions =
+        categories?.pages
+            .flatMap((page) => page.data || [])
+            .map((category) => ({
+                label: category.name,
+                value: category.id,
+            })) || []
+
+    const loadMoreCategoryOptions = () => {
+        if (hasNextPageCategoryOptions && !isFetchingNextPageCategoryOptions) {
+            fetchNextPageCategoryOptions()
+        }
+    }
+
+    return {
+        categoryOptions,
+        categorySearchText,
+        setCategorySearchText,
+        isLoadingCategoryOptions,
+        loadMoreCategoryOptions,
+        isFetchingNextPageCategoryOptions,
+    } as const
 }
 
 export const useGetCategory = (id: string) => {
