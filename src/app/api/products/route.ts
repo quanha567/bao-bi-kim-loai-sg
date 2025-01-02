@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { ProductModel, ProductModel } from '@/models'
+import { ProductModel } from '@/models'
 import { categoryService, imageService, productService } from '@/services'
 
 export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url)
     const ids = searchParams.getAll('ids')
+
     try {
         if (ids.length === 0) {
             return NextResponse.json({ error: 'Missing ids' }, { status: 400 })

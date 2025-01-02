@@ -54,7 +54,7 @@ export type ColumnType<T> = {
 }[]
 
 const alignClass = {
-    center: 'text-center',
+    center: 'text-center flex justify-center',
     left: 'text-left',
     right: 'text-right',
 }

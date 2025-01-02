@@ -50,6 +50,9 @@ export const productService = {
                         },
                     ],
                 },
+                include: {
+                    category: true,
+                },
             }),
             prisma.product.count({
                 where: {
