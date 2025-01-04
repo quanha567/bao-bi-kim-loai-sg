@@ -4,4 +4,5 @@ export enum QUERY_KEY {
     PRODUCT = 'product',
     PRODUCTS = 'products',
     CATEGORY_OPTIONS = 'CATEGORY_OPTIONS',
+    SETTING = 'SETTING',
 }

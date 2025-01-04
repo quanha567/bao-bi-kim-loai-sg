@@ -53,3 +53,15 @@ model Article {
   tags      String[]
   status    ArticleStatus @default(DRAFT)
 }
+
+model Setting {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  phoneNumber String?
+  email       String?
+  fbLink      String?
+  youtubeLink String?
+  zaloLink    String?
+  address     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

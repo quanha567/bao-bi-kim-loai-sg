@@ -17,7 +17,7 @@ export const categoryService = {
         const [categories, total] = await prisma.$transaction([
             prisma.category.findMany({
                 orderBy: {
-                    [sortBy]: 'asc',
+                    [sortBy]: 'desc',
                 },
                 skip,
                 take: pageSize,
