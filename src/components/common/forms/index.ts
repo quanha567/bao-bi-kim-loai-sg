@@ -1,3 +1,4 @@
+export * from './form-ckeditor'
 export * from './form-input'
 export * from './form-select'
 export * from './form-textarea'

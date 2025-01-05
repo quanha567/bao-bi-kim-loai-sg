@@ -3,4 +3,5 @@ export const API_URL = {
     CATEGORIES: '/categories',
     PRODUCTS: '/products',
     SETTING: '/setting',
+    ARTICLES: '/articles',
 }

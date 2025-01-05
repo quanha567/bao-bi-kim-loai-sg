@@ -5,9 +5,13 @@ export const articleService = {
     checkIsExistSlug: async (slug: string) => !!prisma.article.count({ where: { slug } }),
     createArticle: async (data: ArticleModel) => {
         return prisma.article.create({
-            data,
+            data: {
+                ...data,
+                thumbnail: typeof data.thumbnail === 'string' ? data.thumbnail : undefined,
+            },
         })
     },
+    getArticle: async (id: string) => prisma.article.findUnique({ where: { id } }),
     deleteArticles: async (ids: string[]) =>
         prisma.article.deleteMany({ where: { id: { in: ids } } }),
     getArticles: async (
@@ -65,10 +69,14 @@ export const articleService = {
         return { articles, total }
     },
     updateArticle: async (data: ArticleModel) => {
-        return prisma.product.update({
-            data,
+        return prisma.article.update({
+            data: {
+                ...data,
+                thumbnail: typeof data.thumbnail === 'string' ? data.thumbnail : null,
+            },
             where: { id: data.id },
         })
     },
     generateSlug: (name: string) => name.toLowerCase().replace(/\s+/g, '-'),
+    getBySlug: async (slug: string) => prisma.article.findUnique({ where: { slug } }),
 }

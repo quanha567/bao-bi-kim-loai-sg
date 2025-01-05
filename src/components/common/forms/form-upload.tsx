@@ -13,7 +13,13 @@ import {
 } from 'react'
 import { useFormContext } from 'react-hook-form'
 
+import Image from 'next/image'
+
 import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
     FormControl,
     FormDescription,
     FormField,
@@ -364,7 +370,7 @@ export const FormUpload = ({
                                                     ) : isCompact ? (
                                                         <></>
                                                     ) : (
-                                                        <div className="hidden w-full max-w-[96px] rounded bg-zinc-200 p-[1%] text-center text-[10px] text-sm font-bold text-zinc-700 transition-all hover:bg-primary hover:text-white md:block md:text-xs lg:text-sm">
+                                                        <div className="hidden w-full max-w-[120px] rounded bg-zinc-200 p-[1%] text-center text-[10px] text-sm font-bold text-zinc-700 transition-all hover:bg-primary hover:text-white md:block md:text-xs lg:text-sm">
                                                             CHỌN FILE
                                                         </div>
                                                     )}
@@ -417,19 +423,17 @@ export const FormUpload = ({
                     </FormItem>
                 )}
             />
-
-            {/* {fileUrl ? (
-                <ImagePreview
-                    src={fileUrl}
-                    visible={isOpenPreview}
-                    onClose={() => setIsOpenPreview(false)}
-                />
-            ) : (
-                <></>
-            )} */}
             <div className={`text-center ${isCircle ? 'mt-3' : ''}`}>
                 <span className="text-xs italic text-gray-600">{footerLabel}</span>
             </div>
+            <Dialog open={isOpenPreview} onOpenChange={() => setIsOpenPreview(false)}>
+                <DialogContent className="p-8">
+                    <DialogHeader>
+                        <DialogTitle>Preview</DialogTitle>
+                    </DialogHeader>
+                    <Image width={500} height={500} src={fileUrl} alt="Preview" />
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

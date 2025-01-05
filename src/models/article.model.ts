@@ -11,6 +11,6 @@ export interface ArticleModel extends BaseModel {
     slug: string
     status: ArticleStatus
     tags: string[]
-    thumbnail?: string
+    thumbnail?: Blob | string
     title: string
 }

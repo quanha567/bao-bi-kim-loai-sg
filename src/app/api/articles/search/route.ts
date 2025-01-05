@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { productService } from '@/services'
+import { articleService } from '@/services'
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url)
@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     const sortBy = searchParams.get('sortBy') || 'id'
 
     try {
-        const { categories, total } = await productService.getProducts(
+        const { articles, total } = await articleService.getArticles(
             pageIndex,
             pageSize,
             searchText,
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.json(
             {
-                data: categories,
+                data: articles,
                 pageIndex,
                 pageSize,
                 totalElements: total,

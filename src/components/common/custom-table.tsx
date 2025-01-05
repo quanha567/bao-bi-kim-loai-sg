@@ -197,7 +197,7 @@ export const CustomTable = <T,>({
                 <Table className="w-full table-auto border">
                     <TableHeader className="bg-gray-100">
                         <TableRow className="divide-x-[1px]">
-                            <TableHead className="text-center font-bold">STT</TableHead>
+                            <TableHead className="w-20 text-center font-bold">STT</TableHead>
                             {showCheckbox && (
                                 <TableHead className="text-center">
                                     <Checkbox

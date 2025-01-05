@@ -3,7 +3,8 @@ export const DEFAULT_PATH: Record<string, string> = {
 }
 
 export enum ADMIN_PATH {
-    ARTICLE = '/auth/tin-tuc',
+    ADD_ARTICLE = '/auth/bai-viet/them',
+    ARTICLE = '/auth/bai-viet',
     CATEGORY = '/auth/danh-muc',
     CONTACT = '/auth/lien-he',
     DASHBOARD = '/auth/dashboard',

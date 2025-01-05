@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { ProductModel } from '@/models'
-import { categoryService, imageService, productService } from '@/services'
+import { ArticleModel } from '@/models'
+import { articleService, imageService } from '@/services'
 
 export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url)
@@ -12,8 +12,8 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json({ error: 'Missing ids' }, { status: 400 })
         }
 
-        const category = await productService.deleteProducts(ids)
-        return NextResponse.json(category, { status: 200 })
+        const articles = await articleService.deleteArticles(ids)
+        return NextResponse.json(articles, { status: 200 })
     } catch (error) {
         console.log('🚀 -> DELETE -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
@@ -21,12 +21,12 @@ export async function DELETE(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-    const data = (await req.json()) as ProductModel
+    const data = (await req.json()) as ArticleModel
 
     try {
-        const category = await productService.updateProduct(data)
+        const article = await articleService.updateArticle(data)
 
-        return NextResponse.json(category, { status: 200 })
+        return NextResponse.json(article, { status: 200 })
     } catch (error) {
         console.log('🚀 -> PUT -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
@@ -36,33 +36,33 @@ export async function PATCH(req: NextRequest) {
 export async function POST(req: NextRequest) {
     const formData = await req.formData()
     const data = formData.get('data')
-    const image = formData.get('image')
+    const thumbnail = formData.get('thumbnail')
 
     if (!data) {
         return NextResponse.json({ error: 'Missing data' }, { status: 400 })
     }
 
-    const productData = JSON.parse(data as string) as ProductModel
+    const articleData = JSON.parse(data as string) as ArticleModel
 
-    const { name, slug } = productData
+    const { title, slug } = articleData
 
     let validateSlug = slug
 
     try {
         if (!validateSlug) {
             // Generate slug if not provided
-            validateSlug = await categoryService.generateSlug(name)
+            validateSlug = await articleService.generateSlug(title)
         }
 
-        if (image) {
-            const imageResponse = await imageService.uploadImage(image as File)
-            productData.image = imageResponse.url
+        if (thumbnail) {
+            const imageResponse = await imageService.uploadImage(thumbnail as File)
+            articleData.thumbnail = imageResponse.url
         }
 
-        productData.slug = validateSlug
-        const category = await productService.createProduct(productData)
+        articleData.slug = validateSlug
+        const article = await articleService.createArticle(articleData)
 
-        return NextResponse.json(category, { status: 201 })
+        return NextResponse.json(article, { status: 201 })
     } catch (error) {
         console.log('🚀 -> POST -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
