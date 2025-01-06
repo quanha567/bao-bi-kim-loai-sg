@@ -1,5 +1,4 @@
-import Link from 'next/link'
-
+import { ListCategory } from './components'
 import {
     Checkbox,
     ProductItem,
@@ -10,6 +9,8 @@ import {
     SelectValue,
     Typography,
 } from '@/components'
+
+import { categoryApi } from '@/apiClient'
 
 const categories = [
     {
@@ -53,26 +54,12 @@ const categories = [
 const v = [0.5, 1, 5, 20]
 const sizes = ['Ø 190×225', 'Ø 155×170', 'Ø 110×100', 'Ø 100×75']
 
-const ProductPage = () => {
+const ProductPage = async () => {
+    const categories = await categoryApi.getAll()
     return (
         <div className="container grid grid-cols-[300px_1fr] divide-x-[1px] py-10">
             <div className="space-y-4 pr-4">
-                <div>
-                    <div className="mb-2 w-fit border-b border-[#808080] pb-1">
-                        <Typography as="h3" variant="bold-lg">
-                            Danh mục sản phẩm
-                        </Typography>
-                    </div>
-                    <div className="flex flex-col">
-                        {categories.map((category, index) => (
-                            <Link href={'#'} key={index} className="py-1 hover:underline">
-                                <Typography as="span" variant="link">
-                                    {category.name} ({category.quantity})
-                                </Typography>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
+                <ListCategory categories={categories} />
                 <div>
                     <div className="mb-2 w-fit border-b border-[#808080] pb-1">
                         <Typography as="h3" variant="bold-lg">

@@ -84,8 +84,8 @@ export const useUpdateCategory = () => {
     const queryClient = useQueryClient()
 
     return useMutation<CategoryModel, Error, CategoryModel>({
-        mutationFn: async (data: CategoryModel) => {
-            const response = await categoryApi.update(data.id, data)
+        mutationFn: async (data: Partial<CategoryModel>) => {
+            const response = await categoryApi.update(data)
             return response
         },
         onSuccess: (data: CategoryModel) => {
@@ -97,7 +97,7 @@ export const useUpdateCategory = () => {
 }
 
 export const useDeleteCategory = () => {
-    return useMutation<void, Error, string>({
+    return useMutation<void, Error, string | string[]>({
         mutationFn: async (ids: string | string[]) => {
             await categoryApi.delete(ids)
         },

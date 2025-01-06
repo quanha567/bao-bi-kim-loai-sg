@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import { Montserrat } from 'next/font/google'
 
-import { AdminLayout } from '@/layouts'
+import { LayoutWrapper } from '@/layouts'
 
 import './globals.css'
 
@@ -28,7 +28,7 @@ export default function RootLayout({
         <html lang="vi">
             <body className={`${geistSans.variable} bg-[#F8F8F8] antialiased`}>
                 <UIProvider>
-                    <AdminLayout>{children}</AdminLayout>
+                    <LayoutWrapper>{children}</LayoutWrapper>
                 </UIProvider>
             </body>
         </html>

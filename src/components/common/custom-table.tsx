@@ -197,15 +197,15 @@ export const CustomTable = <T,>({
                 <Table className="w-full table-auto border">
                     <TableHeader className="bg-gray-100">
                         <TableRow className="divide-x-[1px]">
-                            <TableHead className="w-20 text-center font-bold">STT</TableHead>
                             {showCheckbox && (
-                                <TableHead className="text-center">
+                                <TableHead className="flex w-10 items-center justify-center">
                                     <Checkbox
                                         checked={isAllSelected}
                                         onCheckedChange={handleSelectAll}
                                     />
                                 </TableHead>
                             )}
+                            <TableHead className="w-20 text-center font-bold">STT</TableHead>
                             {columns.map((col) => (
                                 <TableHead
                                     key={String(col.key)}
@@ -277,13 +277,10 @@ export const CustomTable = <T,>({
                                     onClick={() => onRowClick && onRowClick(item[rowKey])}
                                     className="divide-x-[1px] border-b border-gray-300 hover:bg-transparent"
                                 >
-                                    <TableCell className="text-center font-medium">
-                                        {pageIndex * pageSize + data.indexOf(item) + 1}
-                                    </TableCell>
                                     {showCheckbox && (
                                         <TableCell
-                                            className="text-center font-medium"
                                             onClick={(e) => e.stopPropagation()}
+                                            className="flex w-10 items-center justify-center"
                                         >
                                             <Checkbox
                                                 checked={selectedCheckboxes.has(item[rowKey])}
@@ -293,6 +290,9 @@ export const CustomTable = <T,>({
                                             />
                                         </TableCell>
                                     )}
+                                    <TableCell className="text-center font-medium">
+                                        {pageIndex * pageSize + data.indexOf(item) + 1}
+                                    </TableCell>
                                     {columns.map((col) => (
                                         <TableCell
                                             key={`${String(item[rowKey])}-${String(col.key)}`}

@@ -29,6 +29,7 @@ import {
     useDeleteCategory,
     useDisclosure,
     useGetCategories,
+    useSearch,
     useToast,
     useUpdateCategory,
 } from '@/hooks'
@@ -56,6 +57,8 @@ const AdminCategoryPage = () => {
 
     const [categoryIds, setCategoryIds] = useState<string[]>([])
 
+    const { pageIndex, pageSize, searchText, handlePaginationChange } = useSearch({})
+
     const [isDialogOpen, { toggle: toggleDialog }] = useDisclosure(false, {
         onClose: () => {
             form.reset()
@@ -68,7 +71,11 @@ const AdminCategoryPage = () => {
         data: categoriesData,
         isLoading: isLoadingCategories,
         refetch: fetchCategories,
-    } = useGetCategories()
+    } = useGetCategories({
+        pageIndex,
+        pageSize,
+        searchText,
+    })
 
     const { mutate: updateCategory, isPending: isUpdatingCategory } = useUpdateCategory()
 
@@ -83,9 +90,9 @@ const AdminCategoryPage = () => {
             render: (data) => data.name,
         },
         {
-            key: 'products',
-            label: 'Số lượng sản phẩm',
-            render: (data) => data.products?.length || 0,
+            key: 'slug',
+            label: 'Slug',
+            render: (data) => data.slug,
         },
         {
             key: 'id',
@@ -165,6 +172,7 @@ const AdminCategoryPage = () => {
             onSuccess: async () => {
                 await fetchCategories()
                 toggleModalDelete()
+                form.reset()
                 toast({
                     title: 'Xóa danh mục thành công!',
                     variant: 'success',
@@ -187,13 +195,14 @@ const AdminCategoryPage = () => {
     return (
         <>
             <CustomTable
-                rowKey={'id'}
+                rowKey="id"
                 columns={columns}
                 tableName="Danh sách danh mục"
                 isLoading={isLoadingCategories}
                 data={categoriesData?.data || []}
                 pageSize={categoriesData?.pageSize || 0}
                 pageIndex={categoriesData?.pageIndex || 0}
+                onPaginationChange={handlePaginationChange}
                 totalPages={categoriesData?.totalPages || 0}
                 totalElements={categoriesData?.totalElements || 0}
                 extraButtons={<AddButton onClick={toggleDialog}>Thêm danh mục</AddButton>}

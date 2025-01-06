@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { DefaultFooter, DefaultHeader } from '../components'
 
 const contactInfo = {

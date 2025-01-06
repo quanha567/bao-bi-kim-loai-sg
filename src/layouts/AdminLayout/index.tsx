@@ -1,7 +1,10 @@
+'use client'
+
 import { Archive, Box, FileText, Headset, Home, Settings } from 'lucide-react'
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import {
     Sidebar,
@@ -70,27 +73,37 @@ const items = [
     },
 ]
 export function AppSidebar() {
+    const pathName = usePathname()
+
     return (
         <Sidebar className="bg-white">
-            <SidebarHeader>
+            <SidebarHeader className="border-b">
                 <Image src={Logo} alt="logo" className="w-3/5 object-contain" />
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild size="lg">
-                                        <Link href={item.url}>
-                                            <item.icon size={20} />
-                                            <Typography as="span" variant="link">
-                                                {item.title}
-                                            </Typography>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
+                            {items.map((item) => {
+                                const isActive = pathName === item.url
+                                return (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton
+                                            asChild
+                                            size="lg"
+                                            isActive={isActive}
+                                            className={isActive ? '!bg-primary !text-white' : ''}
+                                        >
+                                            <Link href={item.url}>
+                                                <item.icon size={20} />
+                                                <Typography as="span" variant="link">
+                                                    {item.title}
+                                                </Typography>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                )
+                            })}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
