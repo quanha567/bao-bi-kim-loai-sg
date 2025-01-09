@@ -126,7 +126,7 @@ export const CustomTable = <T,>({
         setIsAllSelected(data.every((item) => selectedCheckboxes.has(item[rowKey])))
     }, [pageIndex, data, selectedCheckboxes])
     const [isListView, setIsListView] = useState<boolean>(() => {
-        const savedView = localStorage.getItem('listViewMode')
+        const savedView = localStorage?.getItem('listViewMode')
         return savedView ? JSON.parse(savedView) : false
     })
 

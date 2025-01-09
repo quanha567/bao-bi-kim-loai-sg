@@ -1,6 +1,6 @@
 'use client'
 
-import { Archive, Box, FileText, Headset, Home, Settings } from 'lucide-react'
+import { Archive, Box, FileText, Headset, Home, PanelTop, Settings } from 'lucide-react'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -65,6 +65,11 @@ const items = [
         icon: Headset,
         title: 'Liên hệ',
         url: ADMIN_PATH.CONTACT,
+    },
+    {
+        icon: PanelTop,
+        title: 'Trang',
+        url: ADMIN_PATH.PAGE,
     },
     {
         icon: Settings,

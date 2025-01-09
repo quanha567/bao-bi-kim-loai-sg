@@ -7,4 +7,5 @@ export enum QUERY_KEY {
     PRODUCT = 'product',
     PRODUCTS = 'products',
     SETTING = 'SETTING',
+    PAGES = 'PAGES',
 }

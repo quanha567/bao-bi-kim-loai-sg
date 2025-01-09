@@ -65,3 +65,19 @@ model Setting {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+enum LinkType {
+  PRODUCT
+  CATEGORY
+  ARTICLE
+  CUSTOM
+}
+
+model Page {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  type      LinkType @default(CUSTOM)
+  targetId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

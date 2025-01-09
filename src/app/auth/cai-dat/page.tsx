@@ -13,8 +13,6 @@ import {
     CardTitle,
     FormInput,
     FormTextarea,
-    Input,
-    Label,
 } from '@/components'
 
 import { useCreateOrUpdateSetting, useGetSetting, useToast } from '@/hooks'
@@ -76,12 +74,12 @@ const SettingPage = () => {
 
     return (
         <FormProvider {...formMethods}>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4">
                 <Card>
                     <CardHeader>
                         <CardTitle>Thông tin liên hệ</CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="grid grid-cols-2 gap-4">
                         <FormInput name="phoneNumber" label="Số điện thoại" />
                         <FormInput name="email" label="Email" />
                         <FormInput name="fbLink" label="Link facebook" />
@@ -104,9 +102,7 @@ const SettingPage = () => {
                     <CardContent>
                         <div>
                             <div>
-                                <Label>Trang chủ</Label>
-                                <Input />
-                                <Input />
+                                <FormInput label="" name="header" />
                             </div>
                         </div>
                     </CardContent>

@@ -29,6 +29,9 @@ export const categoryService = {
                 },
                 select: {
                     products: true,
+                    id: true,
+                    name: true,
+                    slug: true,
                 },
             }),
             prisma.category.count({

@@ -5,6 +5,7 @@ export enum ADMIN_PATH {
     CONTACT = '/auth/lien-he',
     DASHBOARD = '/auth/dashboard',
     LOGIN = '/auth/dang-nhap',
+    PAGE = '/auth/trang',
     PRODUCT = '/auth/san-pham',
     SETTING = '/auth/cai-dat',
 }
