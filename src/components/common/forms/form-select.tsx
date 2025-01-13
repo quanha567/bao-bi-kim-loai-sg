@@ -20,6 +20,11 @@ import {
     SelectValue,
 } from '@/components'
 
+export type SelectOption = {
+    label: ReactNode
+    value: string
+}
+
 interface FormSelectProps<T> {
     description?: ReactNode
     isLoading?: boolean
@@ -34,11 +39,6 @@ interface FormSelectProps<T> {
     searchable?: boolean
     searchPlaceholder?: string
     searchValue?: string
-}
-
-type SelectOption = {
-    label: ReactNode
-    value: string
 }
 
 export const FormSelect = <TFormValues extends Record<string, unknown>>({

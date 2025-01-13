@@ -1,13 +1,14 @@
 'use client'
 
 import { SaveIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import { z } from 'zod'
 
 import {
     AddButton,
+    Badge,
     Button,
     ColumnType,
     CustomTable,
@@ -25,12 +26,16 @@ import {
     UpdateButton,
 } from '@/components'
 
-import { PAGE_TYPE_OPTIONS } from '@/constants'
+import { PAGE_TYPE_NAMES, PAGE_TYPE_OPTIONS } from '@/constants'
 import {
+    toast,
     useCreatePage,
     useDeletePage,
     useDisclosure,
     useGetAllPage,
+    useGetArticleOptions,
+    useGetCategoryOptions,
+    useGetProductOptions,
     useToast,
     useUpdatePage,
 } from '@/hooks'
@@ -40,16 +45,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 const initialValues: Partial<PageModel> = {
     name: '',
     type: PageType.CUSTOM,
+    targetId: '',
 }
 
 const formSchema = z.object({
-    name: z.string().nonempty('Tên trang không được để trống'),
+    name: z.string().nonempty('Tên trang không được để trống!'),
     type: z
         .enum(Object.values(PageType) as [PageType, ...PageType[]])
         .default(PageType.CUSTOM)
         .optional(),
     id: z.string().optional(),
-    target: z.string().optional(),
+    targetId: z.string().nonempty('Liên kết không được để trống!'),
 })
 
 const PagePage = () => {
@@ -60,24 +66,50 @@ const PagePage = () => {
 
     const { toast } = useToast()
 
-    const { type } = form.watch()
+    const { type, id } = form.watch()
 
     const [pageIds, setPageIds] = useState<string[]>([])
 
-    const [isDialogOpen, { toggle: toggleDialog }] = useDisclosure(false, {
-        onClose: () => {
-            form.reset()
-        },
-    })
+    const [isDialogOpen, { toggle: toggleDialog }] = useDisclosure(false)
 
     const [isModalDeleteOpen, { toggle: toggleModalDelete }] = useDisclosure(false)
 
-    const { data: pages, isLoading: isLoadingPages, refetch: fetchCategories } = useGetAllPage()
+    const { data: pages, isLoading: isLoadingPages, refetch: fetchPages } = useGetAllPage()
     const { mutate: updatePage, isPending: isUpdatingPage } = useUpdatePage()
 
     const { mutate: createPage, isPending: isCreatingPage } = useCreatePage()
 
     const { mutate: deletePage, isPending: isDeletingPage } = useDeletePage()
+
+    const {
+        categoryOptions,
+        isFetchingNextPageCategoryOptions,
+        isLoadingCategoryOptions,
+        loadMoreCategoryOptions,
+    } = useGetCategoryOptions({
+        isEnable: type === PageType.CATEGORY,
+        optionKey: 'slug',
+    })
+
+    const {
+        isFetchingNextPageProductOptions,
+        isLoadingProductOptions,
+        loadMoreProductOptions,
+        productOptions,
+    } = useGetProductOptions({
+        isEnable: type === PageType.PRODUCT,
+        optionKey: 'slug',
+    })
+
+    const {
+        articleOptions,
+        isFetchingNextPageArticleOptions,
+        isLoadingArticleOptions,
+        loadMoreArticleOptions,
+    } = useGetArticleOptions({
+        isEnable: type === PageType.ARTICLE,
+        optionKey: 'slug',
+    })
 
     const columns: ColumnType<PageModel> = [
         {
@@ -88,7 +120,12 @@ const PagePage = () => {
         {
             key: 'type',
             label: 'Loại trang',
-            render: (data) => data.type,
+            render: (data) => <Badge variant="outline">{PAGE_TYPE_NAMES[data.type]}</Badge>,
+        },
+        {
+            key: 'targetId',
+            label: 'Liên kết',
+            render: (data) => data.targetId,
         },
         {
             key: 'id',
@@ -104,6 +141,11 @@ const PagePage = () => {
 
     const openUpdateDialog = (data: PageModel) => {
         form.reset({ ...data })
+        toggleDialog()
+    }
+
+    const openCreateDialog = () => {
+        form.reset(initialValues)
         toggleDialog()
     }
 
@@ -153,7 +195,7 @@ const PagePage = () => {
 
         deletePage(pageIds, {
             onSuccess: async () => {
-                await fetchCategories()
+                await fetchPages()
                 toggleModalDelete()
                 form.reset()
                 toast({
@@ -175,16 +217,47 @@ const PagePage = () => {
         toggleModalDelete()
     }
 
+    useEffect(() => {
+        form.setValue('targetId', '')
+    }, [type])
+
     const renderTarget = () => {
         switch (type) {
             case PageType.ARTICLE:
-                return <FormInput name="targetId" label="Liên kết" />
+                return (
+                    <FormSelect
+                        name="targetId"
+                        options={articleOptions}
+                        label="Bài việt liên kết"
+                        isLoading={isLoadingArticleOptions}
+                        onLoadMore={loadMoreArticleOptions}
+                        isLoadingMore={isFetchingNextPageArticleOptions}
+                    />
+                )
             case PageType.CATEGORY:
-                return <></>
+                return (
+                    <FormSelect
+                        name="targetId"
+                        label="Danh mục liên kết"
+                        options={categoryOptions}
+                        isLoading={isLoadingCategoryOptions}
+                        onLoadMore={loadMoreCategoryOptions}
+                        isLoadingMore={isFetchingNextPageCategoryOptions}
+                    />
+                )
             case PageType.CUSTOM:
-                return <FormInput name="targetId" label="Liên kết" placeholder="/trang-chu" />
+                return <FormInput name="targetId" label="Liên kết" />
             case PageType.PRODUCT:
-                return <></>
+                return (
+                    <FormSelect
+                        name="targetId"
+                        options={productOptions}
+                        label="Sản phẩm liên kết"
+                        isLoading={isLoadingProductOptions}
+                        onLoadMore={loadMoreProductOptions}
+                        isLoadingMore={isFetchingNextPageProductOptions}
+                    />
+                )
             default:
         }
     }
@@ -197,12 +270,12 @@ const PagePage = () => {
                 data={pages || []}
                 isLoading={isLoadingPages}
                 tableName="Danh sách trang"
-                extraButtons={<AddButton onClick={toggleDialog}>Thêm mới</AddButton>}
+                extraButtons={<AddButton onClick={openCreateDialog}>Thêm mới</AddButton>}
             />
             <Dialog open={isDialogOpen} onOpenChange={toggleDialog}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Thêm trang</DialogTitle>
+                        <DialogTitle>{id ? 'Cập nhật trang' : 'Thêm trang'}</DialogTitle>
                         <DialogDescription></DialogDescription>
                     </DialogHeader>
                     <div>

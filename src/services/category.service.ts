@@ -46,8 +46,9 @@ export const categoryService = {
 
         return { categories, total }
     },
-    updateCategory: async (id: string, name: string, slug: string) =>
-        prisma.category.update({ data: { name, slug }, where: { id } }),
+    updateCategory: async (id: string, name: string, slug: string) => {
+        return prisma.category.update({ data: { name, slug }, where: { id } })
+    },
     generateSlug: (name: string) =>
         name
             .toLowerCase() // Convert to lowercase

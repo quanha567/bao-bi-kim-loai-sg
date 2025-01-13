@@ -8,4 +8,6 @@ export enum QUERY_KEY {
     PRODUCTS = 'products',
     SETTING = 'SETTING',
     PAGES = 'PAGES',
+    PRODUCT_OPTIONS = 'PRODUCT_OPTIONS',
+    ARTICLE_OPTIONS = 'ARTICLE_OPTIONS',
 }

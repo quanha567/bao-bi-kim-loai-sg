@@ -52,6 +52,7 @@ const initialValues: Partial<ProductModel> = {
         updatedAt: '',
     },
     image: undefined,
+    imageHover: undefined,
 }
 
 const formSchema = z.object({
@@ -61,8 +62,8 @@ const formSchema = z.object({
     category: z.object({
         id: z.string().nonempty('Danh mục không được để trống'),
     }),
-    image: z.instanceof(Blob).optional(),
-    imageHover: z.instanceof(Blob).optional(),
+    image: z.instanceof(Blob).or(z.string()).optional(),
+    imageHover: z.instanceof(Blob).or(z.string()).optional(),
 })
 
 const AdminProductPage = () => {

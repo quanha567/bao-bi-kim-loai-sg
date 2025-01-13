@@ -69,12 +69,13 @@ export const articleService = {
         return { articles, total }
     },
     updateArticle: async (data: ArticleModel) => {
+        const { id, ...rest } = data
         return prisma.article.update({
             data: {
-                ...data,
+                ...rest,
                 thumbnail: typeof data.thumbnail === 'string' ? data.thumbnail : null,
             },
-            where: { id: data.id },
+            where: { id },
         })
     },
     generateSlug: (name: string) => name.toLowerCase().replace(/\s+/g, '-'),

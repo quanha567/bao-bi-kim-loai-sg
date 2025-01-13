@@ -10,6 +10,7 @@ export const productService = {
             data: {
                 ...rest,
                 image: typeof rest.image === 'string' ? rest.image : null,
+                imageHover: typeof rest.imageHover === 'string' ? rest.imageHover : null,
                 category: {
                     connect: { id: category.id },
                 },
@@ -80,17 +81,18 @@ export const productService = {
         return { products, total }
     },
     updateProduct: async (data: ProductModel) => {
-        const { category, ...rest } = data
+        const { category, id, ...rest } = data
 
         return prisma.product.update({
             data: {
                 ...rest,
                 image: typeof rest.image === 'string' ? rest.image : null,
+                imageHover: typeof rest.imageHover === 'string' ? rest.imageHover : null,
                 category: {
                     connect: { id: category.id },
                 },
             },
-            where: { id: data.id },
+            where: { id },
         })
     },
     generateSlug: (name: string) => name.toLowerCase().replace(/\s+/g, '-'),

@@ -25,16 +25,13 @@ export async function GET() {
 
 export async function PATCH(req: NextRequest) {
     const data = (await req.json()) as SettingModel
-    console.log('PATCH  data:', data)
 
     try {
         const setting = await settingService.createOrUpdateSetting(data)
-        if (!setting) {
-            return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
-        }
+
         return NextResponse.json(setting, { status: 200 })
     } catch (error) {
-        console.log('🚀 -> PUT -> error:', error)
+        console.log('🚀 -> PATCH -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
     }
 }

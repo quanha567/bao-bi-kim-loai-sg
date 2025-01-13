@@ -6,14 +6,12 @@ export const settingService = {
         return await prisma.setting.findFirst()
     },
     createOrUpdateSetting: async (data: SettingModel) => {
-        if (data.id) {
+        if (data?.id) {
+            const { id, ...rest } = data
             // Ensure the ID is valid before updating
             return await prisma.setting.update({
-                where: { id: data.id },
-                data: {
-                    ...data,
-                    updatedAt: new Date(),
-                }, // Ensure `data` has the correct shape
+                where: { id },
+                data: rest,
             })
         }
 

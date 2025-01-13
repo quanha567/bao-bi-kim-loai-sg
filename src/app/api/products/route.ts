@@ -21,14 +21,47 @@ export async function DELETE(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-    const data = (await req.json()) as ProductModel
+    const formData = await req.formData()
+    const data = formData.get('data')
+    const image = formData.get('image')
+    const imageHover = formData.get('imageHover')
+
+    if (!data) {
+        return NextResponse.json({ error: 'Missing data' }, { status: 400 })
+    }
+
+    const productData = JSON.parse(data as string) as ProductModel
+    const { name, slug } = productData
+
+    let validateSlug = slug
 
     try {
-        const product = await productService.updateProduct(data)
+        if (!validateSlug) {
+            validateSlug = await categoryService.generateSlug(name)
+        }
 
+        productData.slug = validateSlug
+
+        // Start image uploads in parallel
+        const imageUploadPromises: Promise<any>[] = []
+        if (image) {
+            imageUploadPromises.push(imageService.uploadImage(image as File))
+        }
+        if (imageHover) {
+            imageUploadPromises.push(imageService.uploadImage(imageHover as File))
+        }
+
+        // Wait for all uploads
+        const [imageResponse, imageHoverResponse] = await Promise.all(imageUploadPromises)
+
+        // Update productData with uploaded image URLs
+        if (imageResponse) productData.image = imageResponse.url
+        if (imageHoverResponse) productData.imageHover = imageHoverResponse.url
+
+        const product = await productService.updateProduct(productData)
         return NextResponse.json(product, { status: 200 })
     } catch (error) {
-        console.log('🚀 -> PUT -> error:', error)
+        console.error('🚀 -> POST -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
     }
 }

@@ -8,16 +8,20 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     const articleDetail = await articleApi.getOne(slug)
 
     return (
-        <article className="bg-white">
-            <Typography as="h1" variant="h1" className="mb-4">
-                {articleDetail?.title}
-            </Typography>
-            <div
-                className="view ql-editor"
-                dangerouslySetInnerHTML={{
-                    __html: articleDetail?.content,
-                }}
-            ></div>
-        </article>
+        <div className="bg-white">
+            <div className="container py-4 lg:py-6">
+                <article className="prose-lg">
+                    <Typography as="h1" variant="h1" className="mb-4">
+                        {articleDetail?.title}
+                    </Typography>
+                    <div
+                        className="view ql-editor"
+                        dangerouslySetInnerHTML={{
+                            __html: articleDetail?.content,
+                        }}
+                    ></div>
+                </article>
+            </div>
+        </div>
     )
 }

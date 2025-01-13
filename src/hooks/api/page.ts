@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { pageApi } from '@/apiClient'
 import { QUERY_KEY } from '@/constants'
+import { PageModel } from '@/models'
 
 export const useGetAllPage = () => {
     return useQuery({
@@ -14,7 +15,7 @@ export const useCreatePage = () => {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: pageApi.create,
+        mutationFn: (data: PageModel) => pageApi.create(data),
         onSuccess: () => queryClient.refetchQueries({ queryKey: [QUERY_KEY.PAGES] }),
     })
 }
@@ -23,7 +24,7 @@ export const useUpdatePage = () => {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: pageApi.update,
+        mutationFn: (data: PageModel) => pageApi.update(data),
         onSuccess: () => queryClient.refetchQueries({ queryKey: [QUERY_KEY.PAGES] }),
     })
 }
