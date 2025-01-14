@@ -1,6 +1,6 @@
 'use client'
 
-import { Loader } from 'lucide-react'
+import { Database, Loader } from 'lucide-react'
 import { ReactNode } from 'react'
 import { Path, useFormContext } from 'react-hook-form'
 
@@ -18,6 +18,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
+    Typography,
 } from '@/components'
 
 export type SelectOption = {
@@ -34,7 +35,7 @@ interface FormSelectProps<T> {
     name: Path<T>
     onLoadMore?: () => void
     onSearchChange?: (value: string) => void
-    options: SelectOption[]
+    options?: SelectOption[]
     placeholder?: string
     searchable?: boolean
     searchPlaceholder?: string
@@ -80,6 +81,12 @@ export const FormSelect = <TFormValues extends Record<string, unknown>>({
                                         placeholder={searchPlaceholder}
                                         onChange={(e) => onSearchChange?.(e.target.value)}
                                     />
+                                )}
+                                {!options.length && (
+                                    <div className="flex flex-col items-center justify-center gap-1 py-4">
+                                        <Database size={24} />
+                                        <Typography variant="link">Không có dữ liệu</Typography>
+                                    </div>
                                 )}
                                 <SelectGroup
                                     className="max-h-44 overflow-y-auto"

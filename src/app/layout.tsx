@@ -1,11 +1,13 @@
+import { SessionProvider } from 'next-auth/react'
+
 import type { Metadata } from 'next'
 
 import { Montserrat } from 'next/font/google'
 
-import { LayoutWrapper } from '@/layouts'
-
 import './globals.css'
 
+import { auth } from '@/auth'
+import { LayoutWrapper } from '@/layouts'
 import { UIProvider } from '@/providers'
 
 const geistSans = Montserrat({
@@ -19,17 +21,20 @@ export const metadata: Metadata = {
     title: 'Bao bì kim loại Sài Gòn',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode
 }>) {
+    const session = await auth()
     return (
         <html lang="vi">
             <body className={`${geistSans.variable} bg-[#F8F8F8] antialiased`}>
-                <UIProvider>
-                    <LayoutWrapper>{children}</LayoutWrapper>
-                </UIProvider>
+                <SessionProvider session={session}>
+                    <UIProvider>
+                        <LayoutWrapper>{children}</LayoutWrapper>
+                    </UIProvider>
+                </SessionProvider>
             </body>
         </html>
     )

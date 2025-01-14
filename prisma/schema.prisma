@@ -55,15 +55,27 @@ model Article {
 }
 
 model Setting {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
   phoneNumber String?
   email       String?
   fbLink      String?
   youtubeLink String?
   zaloLink    String?
   address     String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  menus       MenuSetting[]
+}
+
+model MenuSetting {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  setting       Setting?      @relation(fields: [settingId], references: [id])
+  settingId     String?       @db.ObjectId
+  page          Page          @relation(fields: [pageId], references: [id])
+  pageId        String        @db.ObjectId
+  children      MenuSetting[] @relation("MenuSettingRelation")
+  menuSetting   MenuSetting?  @relation("MenuSettingRelation", fields: [menuSettingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  menuSettingId String?       @db.ObjectId
 }
 
 enum LinkType {
@@ -74,12 +86,13 @@ enum LinkType {
 }
 
 model Page {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  type      LinkType @default(CUSTOM)
-  targetId  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  type         LinkType      @default(CUSTOM)
+  targetId     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  menuSettings MenuSetting[]
 }
 
 model User {

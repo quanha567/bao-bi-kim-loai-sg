@@ -1,5 +1,5 @@
 'use client'
-import { SaveIcon } from 'lucide-react'
+import { BadgePlus, CircleChevronRight, Logs, SaveIcon, Trash2 } from 'lucide-react'
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
@@ -12,7 +12,9 @@ import {
     CardHeader,
     CardTitle,
     FormInput,
+    FormSelect,
     FormTextarea,
+    Typography,
 } from '@/components'
 
 import { useCreateOrUpdateSetting, useGetSetting, useToast } from '@/hooks'
@@ -99,16 +101,79 @@ const SettingPage = () => {
                     <CardHeader>
                         <CardTitle>Cấu hình Menu</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div>
-                            <div>
-                                <FormInput label="" name="header" />
-                            </div>
+                    <CardContent className="space-y-3">
+                        {Array.from({ length: 5 }, (_, i) => (
+                            <MenuGroup key={i} index={i + 1} />
+                        ))}
+                        <div className="flex items-center gap-2">
+                            <Button>
+                                <BadgePlus />
+                                Thêm menu
+                            </Button>
+                            <Button>
+                                <SaveIcon />
+                                Lưu
+                            </Button>
                         </div>
                     </CardContent>
                 </Card>
             </div>
         </FormProvider>
+    )
+}
+
+interface MenuItemProps {
+    index: number
+    subIndex?: number
+}
+
+export const MenuItem = ({ index, subIndex }: MenuItemProps) => {
+    return (
+        <div className="flex items-center gap-2">
+            <CircleChevronRight className="mt-6" />
+            {typeof subIndex === 'number' && <CircleChevronRight className="mt-6" />}
+            <div className="flex-1">
+                <FormInput name="header" label="Tên menu" />
+            </div>{' '}
+            <div className="flex-1">
+                <FormSelect name="header" label="Trang liên kết" />
+            </div>
+            {typeof subIndex === 'number' && (
+                <Button size="icon" className="mt-6" variant="destructive">
+                    <Trash2 />
+                </Button>
+            )}
+        </div>
+    )
+}
+
+interface MenuGroupProps {
+    index: number
+}
+
+export const MenuGroup = ({ index }: MenuGroupProps) => {
+    const children = ['', '', '']
+    return (
+        <div className="rounded-lg border p-3">
+            <div className="flex items-center gap-2 px-3 py-2">
+                <Logs size={16} />
+                <Typography variant="link">Menu {index}</Typography>
+            </div>
+            <MenuItem index={index} />
+            {children.map((_, i) => (
+                <MenuItem key={i} subIndex={i} index={index} />
+            ))}
+            <div className="flex items-center gap-2">
+                <Button variant="destructive">
+                    <Trash2 />
+                    Xóa
+                </Button>
+                <Button variant="outline">
+                    <BadgePlus />
+                    Thêm menu con
+                </Button>
+            </div>
+        </div>
     )
 }
 

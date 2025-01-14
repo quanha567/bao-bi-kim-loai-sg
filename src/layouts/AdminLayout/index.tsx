@@ -6,11 +6,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+import { UserInfoButton } from '../components'
 import { SignIn } from '../components/signin-button'
 import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
     Sidebar,
     SidebarContent,
     SidebarGroup,
@@ -81,18 +79,7 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
                             <SidebarTrigger />
                             <Typography className="font-bold">{matchingRoute.title}</Typography>
                         </div>
-                        <div className="flex cursor-pointer items-center gap-2 rounded-lg border p-1 hover:bg-zinc-200">
-                            <Avatar className="size-8">
-                                <AvatarImage src="https://github.com/shadcn.png" />
-                                <AvatarFallback>CN</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <Typography className="text-xs" variant="bold-uppercase">
-                                    Admin
-                                </Typography>{' '}
-                                <Typography className="text-xs">admin@gmail.com</Typography>
-                            </div>
-                        </div>
+                        <UserInfoButton />
                         <SignIn />
                     </div>
                 )}
