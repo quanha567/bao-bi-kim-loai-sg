@@ -1,7 +1,7 @@
 'use client'
 import { BadgePlus, CircleChevronRight, Logs, SaveIcon, Trash2 } from 'lucide-react'
 import { useEffect } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form'
 
 import { z } from 'zod'
 
@@ -14,10 +14,11 @@ import {
     FormInput,
     FormSelect,
     FormTextarea,
+    SelectOption,
     Typography,
 } from '@/components'
 
-import { useCreateOrUpdateSetting, useGetSetting, useToast } from '@/hooks'
+import { useCreateOrUpdateSetting, useGetPageOptions, useGetSetting, useToast } from '@/hooks'
 import { SettingModel } from '@/models'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -29,6 +30,16 @@ const formSchema = z.object({
     youtubeLink: z.string().url().optional(),
     address: z.string().optional(),
     id: z.string().optional(),
+    menus: z
+        .array(
+            z.object({
+                id: z.string().optional(),
+                pageId: z.string().nonempty('Vui lòng chọn trang liên kết!'),
+                settingId: z.string().optional(),
+                children: z.array(z.object({})).optional(),
+            }),
+        )
+        .optional(),
 })
 const formDefaultValues: z.infer<typeof formSchema> = {
     address: '',
@@ -37,6 +48,7 @@ const formDefaultValues: z.infer<typeof formSchema> = {
     phoneNumber: '',
     zaloLink: '',
     youtubeLink: '',
+    menus: [],
 }
 
 const SettingPage = () => {
@@ -45,6 +57,17 @@ const SettingPage = () => {
     const formMethods = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: formDefaultValues,
+    })
+
+    const { pageOptions } = useGetPageOptions()
+
+    const {
+        fields: menuFields,
+        append: appendMenu,
+        remove: removeMenu,
+    } = useFieldArray({
+        control: formMethods.control,
+        name: 'menus',
     })
 
     const { data: setting, isLoading: isLoadingSetting } = useGetSetting()
@@ -72,6 +95,18 @@ const SettingPage = () => {
                 })
             },
         })
+    }
+
+    const handleAddNewMenu = () => {
+        appendMenu({
+            pageId: '',
+            settingId: setting?.id,
+            children: [],
+        })
+    }
+
+    const handleRemoveMenu = (index: number) => {
+        removeMenu(index)
     }
 
     return (
@@ -102,11 +137,16 @@ const SettingPage = () => {
                         <CardTitle>Cấu hình Menu</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
-                        {Array.from({ length: 5 }, (_, i) => (
-                            <MenuGroup key={i} index={i + 1} />
+                        {menuFields?.map((field, i) => (
+                            <MenuGroup
+                                index={i}
+                                key={field?.id}
+                                options={pageOptions}
+                                onDelete={handleRemoveMenu}
+                            />
                         ))}
                         <div className="flex items-center gap-2">
-                            <Button>
+                            <Button onClick={handleAddNewMenu}>
                                 <BadgePlus />
                                 Thêm menu
                             </Button>
@@ -124,22 +164,40 @@ const SettingPage = () => {
 
 interface MenuItemProps {
     index: number
+    onDelete?: (index: number) => void
+    options?: SelectOption[]
     subIndex?: number
 }
 
-export const MenuItem = ({ index, subIndex }: MenuItemProps) => {
+export const MenuItem = ({ index, subIndex, onDelete, options }: MenuItemProps) => {
     return (
         <div className="flex items-center gap-2">
             <CircleChevronRight className="mt-6" />
             {typeof subIndex === 'number' && <CircleChevronRight className="mt-6" />}
             <div className="flex-1">
-                <FormInput name="header" label="Tên menu" />
-            </div>{' '}
-            <div className="flex-1">
-                <FormSelect name="header" label="Trang liên kết" />
+                {typeof subIndex === 'number' ? (
+                    <FormSelect
+                        options={options}
+                        label="Trang liên kết"
+                        placeholder="-- Chọn trang liên kết --"
+                        name={`menus.${index}.menuSettings.${subIndex}.pageId`}
+                    />
+                ) : (
+                    <FormSelect
+                        options={options}
+                        label="Trang liên kết"
+                        name={`menus.${index}.pageId`}
+                        placeholder="-- Chọn trang liên kết --"
+                    />
+                )}
             </div>
             {typeof subIndex === 'number' && (
-                <Button size="icon" className="mt-6" variant="destructive">
+                <Button
+                    size="icon"
+                    className="mt-6"
+                    variant="destructive"
+                    onClick={() => onDelete?.(subIndex)}
+                >
                     <Trash2 />
                 </Button>
             )}
@@ -149,26 +207,56 @@ export const MenuItem = ({ index, subIndex }: MenuItemProps) => {
 
 interface MenuGroupProps {
     index: number
+    onDelete?: (index: number) => void
+    options?: SelectOption[]
 }
 
-export const MenuGroup = ({ index }: MenuGroupProps) => {
-    const children = ['', '', '']
+export const MenuGroup = ({ index, onDelete, options }: MenuGroupProps) => {
+    const { control } = useFormContext()
+
+    const {
+        fields: childrenMenus,
+        append: appendChildrenMenu,
+        remove: removeChildrenMenu,
+    } = useFieldArray({
+        control,
+        name: `menus.${index}.menuSettings`,
+    })
+
+    const handleAddNewChildrenMenu = () => {
+        appendChildrenMenu({
+            pageId: '',
+        })
+    }
+
+    const handleDeleteChildrenMenu = (index: number) => {
+        removeChildrenMenu(index)
+    }
+
     return (
         <div className="rounded-lg border p-3">
             <div className="flex items-center gap-2 px-3 py-2">
                 <Logs size={16} />
-                <Typography variant="link">Menu {index}</Typography>
+                <Typography variant="link" className="text-base font-bold">
+                    Menu {index + 1}
+                </Typography>
             </div>
-            <MenuItem index={index} />
-            {children.map((_, i) => (
-                <MenuItem key={i} subIndex={i} index={index} />
+            <MenuItem index={index} options={options} />
+            {childrenMenus?.map((field, i) => (
+                <MenuItem
+                    subIndex={i}
+                    index={index}
+                    key={field?.id}
+                    options={options}
+                    onDelete={handleDeleteChildrenMenu}
+                />
             ))}
             <div className="flex items-center gap-2">
-                <Button variant="destructive">
+                <Button size="sm" variant="destructive" onClick={() => onDelete?.(index)}>
                     <Trash2 />
                     Xóa
                 </Button>
-                <Button variant="outline">
+                <Button size="sm" variant="outline" onClick={handleAddNewChildrenMenu}>
                     <BadgePlus />
                     Thêm menu con
                 </Button>

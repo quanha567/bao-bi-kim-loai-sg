@@ -25,6 +25,7 @@ export async function GET() {
 
 export async function PATCH(req: NextRequest) {
     const data = (await req.json()) as SettingModel
+    console.log('PATCH  data:', data)
 
     try {
         const setting = await settingService.createOrUpdateSetting(data)

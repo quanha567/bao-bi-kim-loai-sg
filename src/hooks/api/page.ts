@@ -39,7 +39,7 @@ export const useDeletePage = () => {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: pageApi.delete,
+        mutationFn: (ids: string | string[]) => pageApi.delete(ids),
         onSuccess: () => queryClient.refetchQueries({ queryKey: [QUERY_KEY.PAGES] }),
     })
 }

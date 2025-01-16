@@ -28,7 +28,6 @@ import {
 
 import { PAGE_TYPE_NAMES, PAGE_TYPE_OPTIONS } from '@/constants'
 import {
-    toast,
     useCreatePage,
     useDeletePage,
     useDisclosure,
@@ -48,15 +47,29 @@ const initialValues: Partial<PageModel> = {
     targetId: '',
 }
 
-const formSchema = z.object({
-    name: z.string().nonempty('Tên trang không được để trống!'),
-    type: z
-        .enum(Object.values(PageType) as [PageType, ...PageType[]])
-        .default(PageType.CUSTOM)
-        .optional(),
-    id: z.string().optional(),
-    targetId: z.string().nonempty('Liên kết không được để trống!'),
-})
+const formSchema = z
+    .object({
+        name: z.string().optional(),
+        type: z
+            .enum(Object.values(PageType) as [PageType, ...PageType[]])
+            .default(PageType.CUSTOM)
+            .optional(),
+        id: z.string().optional(),
+        targetId: z.string().nonempty('Liên kết không được để trống!'),
+    })
+    .refine(
+        (data) => {
+            // If type is CUSTOM, name must not be empty
+            if (data.type === PageType.CUSTOM && (!data.name || data.name.trim() === '')) {
+                return false
+            }
+            return true
+        },
+        {
+            message: 'Tên trang không được để trống khi loại là CUSTOM!',
+            path: ['name'], // The field to associate the error message with
+        },
+    )
 
 const PagePage = () => {
     const form = useForm<PageModel>({
@@ -66,7 +79,7 @@ const PagePage = () => {
 
     const { toast } = useToast()
 
-    const { type, id } = form.watch()
+    const { type, id, targetId } = form.watch()
 
     const [pageIds, setPageIds] = useState<string[]>([])
 
@@ -218,8 +231,49 @@ const PagePage = () => {
     }
 
     useEffect(() => {
+        // reset targetId when type change and set name to empty if type is CUSTOM
         form.setValue('targetId', '')
+
+        if (type === PageType.CUSTOM) {
+            form.setValue('name', '')
+        }
     }, [type])
+
+    useEffect(() => {
+        switch (type) {
+            case PageType.ARTICLE: {
+                const selectedArticle = articleOptions.find((item) => item.value === targetId)
+
+                if (selectedArticle?.label) {
+                    form.setValue('name', String(selectedArticle.label), { shouldDirty: true })
+                }
+                break
+            }
+            case PageType.CATEGORY: {
+                const selectedCategory = categoryOptions.find((item) => item.value === targetId)
+
+                if (selectedCategory?.label) {
+                    form.setValue('name', String(selectedCategory.label), {
+                        shouldDirty: true,
+                    })
+                }
+
+                break
+            }
+            case PageType.PRODUCT: {
+                const selectedProduct = productOptions.find((item) => item.value === targetId)
+
+                if (selectedProduct?.label) {
+                    form.setValue('name', String(selectedProduct.label), {
+                        shouldDirty: true,
+                    })
+                }
+                break
+            }
+            default:
+                break
+        }
+    }, [targetId, type])
 
     const renderTarget = () => {
         switch (type) {
@@ -280,12 +334,14 @@ const PagePage = () => {
                     </DialogHeader>
                     <div>
                         <FormProvider {...form}>
-                            <FormInput isRequired name="name" label="Tên trang" />
                             <FormSelect
                                 name="type"
                                 label="Loại trang"
                                 options={PAGE_TYPE_OPTIONS}
                             />
+                            {type === PageType.CUSTOM && (
+                                <FormInput isRequired name="name" label="Tên trang" />
+                            )}
                             {renderTarget()}
                         </FormProvider>
                     </div>
