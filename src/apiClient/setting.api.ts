@@ -1,20 +1,20 @@
 import { API_URL } from '@/constants'
-import { SettingModel } from '@/models'
+import { SettingRequestModel } from '@/models'
 
 import { apiClient } from '.'
 import { BaseApi } from './base.api'
 
-export class SettingApi extends BaseApi<SettingModel> {
+export class SettingApi extends BaseApi<SettingRequestModel> {
     constructor() {
         super(apiClient, API_URL.SETTING)
     }
-    async getOne(): Promise<SettingModel> {
-        const response = await this.client.get<SettingModel>(this.endpoint)
+    async getOne(): Promise<SettingRequestModel> {
+        const response = await this.client.get<SettingRequestModel>(this.endpoint)
         return response.data
     }
 
-    async createOrUpdate(data: SettingModel): Promise<SettingModel> {
-        const response = await this.client.patch<SettingModel>(this.endpoint, data)
+    async createOrUpdate(data: SettingRequestModel): Promise<SettingRequestModel> {
+        const response = await this.client.patch<SettingRequestModel>(this.endpoint, data)
         return response.data
     }
 

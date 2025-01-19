@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { SettingModel } from '@/models'
+import { SettingRequestModel } from '@/models'
 import { settingService } from '@/services'
 
 export async function DELETE() {
@@ -24,7 +24,7 @@ export async function GET() {
 }
 
 export async function PATCH(req: NextRequest) {
-    const data = (await req.json()) as SettingModel
+    const data = (await req.json()) as SettingRequestModel
     console.log('PATCH  data:', data)
 
     try {

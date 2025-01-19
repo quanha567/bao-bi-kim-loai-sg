@@ -1,13 +1,9 @@
 import { BaseModel } from './base.model'
-import { PageModel } from './page.model'
 
 export interface MenuSettingModel extends BaseModel {
-    menuSettingId?: string
+    isChild: any
     menuSettings?: MenuSettingModel[]
-    page?: PageModel
     pageId?: string
-    setting?: SettingModel
-    settingId?: string
 }
 
 export interface SettingModel extends BaseModel {
@@ -18,4 +14,8 @@ export interface SettingModel extends BaseModel {
     phoneNumber?: string
     youtubeLink?: string
     zaloLink?: string
+}
+
+export interface SettingRequestModel extends Omit<SettingModel, 'menus'> {
+    menus?: string
 }

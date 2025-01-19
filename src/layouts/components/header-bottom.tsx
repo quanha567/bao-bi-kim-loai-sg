@@ -20,6 +20,7 @@ import {
     NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 
+import { MenuSettingModel, SettingRequestModel } from '@/models'
 import Logo from '@/public/logo.jpg'
 
 const menuItems = [
@@ -69,7 +70,11 @@ const menuItems = [
     },
 ]
 
-export const HeaderBottom = () => {
+type HeaderBottomProps = SettingRequestModel
+
+export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
+    const convertedMenu = (menus ? JSON.parse(menus) : []) as MenuSettingModel[]
+
     return (
         <div className="container flex items-center justify-between py-3">
             <Link href="/">
@@ -81,50 +86,54 @@ export const HeaderBottom = () => {
                 />
             </Link>
             <div className="hidden flex-col items-end lg:flex xl:flex-row">
-                <NavigationMenu className="flex-1">
-                    <NavigationMenuList>
-                        {menuItems.map((item) => {
-                            if (!item.children?.length) {
+                {Array.isArray(convertedMenu) && convertedMenu.length > 0 ? (
+                    <NavigationMenu className="flex-1">
+                        <NavigationMenuList>
+                            {convertedMenu.map((item) => {
+                                if (!item?.children?.length) {
+                                    return (
+                                        <NavigationMenuItem asChild key={item.pageId}>
+                                            <Link
+                                                passHref
+                                                href={item.pageId}
+                                                className="select-none rounded-md px-3 py-1.5 transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                            >
+                                                <Typography as="span" variant="bold-uppercase">
+                                                    {item.pageId}
+                                                </Typography>
+                                            </Link>
+                                        </NavigationMenuItem>
+                                    )
+                                }
+
                                 return (
-                                    <NavigationMenuItem asChild key={item.title}>
-                                        <Link
-                                            passHref
-                                            href={item.href}
-                                            className="select-none rounded-md px-3 py-1.5 transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                        >
-                                            <Typography as="span" variant="bold-uppercase">
-                                                {item.title}
-                                            </Typography>
-                                        </Link>
+                                    <NavigationMenuItem key={item.title}>
+                                        <NavigationMenuTrigger>
+                                            <Link passHref href={item.href}>
+                                                <Typography as="span" variant="bold-uppercase">
+                                                    {item.title}
+                                                </Typography>
+                                            </Link>
+                                        </NavigationMenuTrigger>
+                                        <NavigationMenuContent>
+                                            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                                                {item.children.map((component) => (
+                                                    <ListItem
+                                                        key={component.title}
+                                                        href={component.href}
+                                                        title={component.title}
+                                                    />
+                                                ))}
+                                            </ul>
+                                        </NavigationMenuContent>
                                     </NavigationMenuItem>
                                 )
-                            }
-
-                            return (
-                                <NavigationMenuItem key={item.title}>
-                                    <NavigationMenuTrigger>
-                                        <Link passHref href={item.href}>
-                                            <Typography as="span" variant="bold-uppercase">
-                                                {item.title}
-                                            </Typography>
-                                        </Link>
-                                    </NavigationMenuTrigger>
-                                    <NavigationMenuContent>
-                                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                                            {item.children.map((component) => (
-                                                <ListItem
-                                                    key={component.title}
-                                                    href={component.href}
-                                                    title={component.title}
-                                                />
-                                            ))}
-                                        </ul>
-                                    </NavigationMenuContent>
-                                </NavigationMenuItem>
-                            )
-                        })}
-                    </NavigationMenuList>
-                </NavigationMenu>
+                            })}
+                        </NavigationMenuList>
+                    </NavigationMenu>
+                ) : (
+                    <></>
+                )}
                 <Button size="icon" variant="ghost">
                     <Search />
                 </Button>

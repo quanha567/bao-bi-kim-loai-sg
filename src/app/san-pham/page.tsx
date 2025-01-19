@@ -10,52 +10,11 @@ import {
     Typography,
 } from '@/components'
 
-import { categoryApi } from '@/apiClient'
-
-const categories = [
-    {
-        name: 'Thùng, lon tròn sơn hóa chất',
-        quantity: 6,
-    },
-    {
-        name: 'Thùng, lon vuông sơn hóa chất',
-        quantity: 6,
-    },
-    {
-        name: 'Thùng, lon hóa chất khác',
-        quantity: 6,
-    },
-    {
-        name: 'Hộp bánh kẹo tròn',
-        quantity: 6,
-    },
-    {
-        name: 'Hộp bánh kẹo vuông, chữ nhật',
-        quantity: 6,
-    },
-    {
-        name: 'Hộp mỹ nghệ',
-        quantity: 6,
-    },
-    {
-        name: 'Lon sữa',
-        quantity: 6,
-    },
-    {
-        name: 'Hộp trà',
-        quantity: 6,
-    },
-    {
-        name: 'Nắp nút các loại',
-        quantity: 6,
-    },
-]
-
 const v = [0.5, 1, 5, 20]
 const sizes = ['Ø 190×225', 'Ø 155×170', 'Ø 110×100', 'Ø 100×75']
 
 const ProductPage = async () => {
-    const categories = await categoryApi.getAll()
+    const categories = await fetch('http://localhost:3000/api/categories').then((res) => res.json())
     return (
         <div className="container grid grid-cols-[300px_1fr] divide-x-[1px] py-10">
             <div className="space-y-4 pr-4">

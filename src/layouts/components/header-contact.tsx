@@ -10,7 +10,11 @@ import { DefaultHeaderProps } from './default-header'
 
 type HeaderContactProps = DefaultHeaderProps
 
-export const HeaderContact = ({ address, mail, phoneNumber }: HeaderContactProps) => {
+export const HeaderContact = ({
+    address = '',
+    email = '',
+    phoneNumber = '',
+}: HeaderContactProps) => {
     return (
         <div className="hidden bg-primary py-2 lg:block">
             <div className="container flex items-center justify-between text-white">
@@ -37,12 +41,12 @@ export const HeaderContact = ({ address, mail, phoneNumber }: HeaderContactProps
                         </Typography>
                     </Link>
                     <Link
-                        href={getLink('mail', mail)}
+                        href={getLink('mail', email)}
                         className="flex items-center gap-1 pl-2 hover:underline"
                     >
                         <Mail size={16} />
                         <Typography as="span" className="text-xs font-medium">
-                            {mail}
+                            {email}
                         </Typography>
                     </Link>
                 </div>

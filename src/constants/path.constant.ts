@@ -3,7 +3,7 @@ export enum ADMIN_PATH {
     ARTICLE = '/auth/bai-viet',
     CATEGORY = '/auth/danh-muc',
     CONTACT = '/auth/lien-he',
-    DASHBOARD = '/auth/dashboard',
+    DASHBOARD = '/auth/trang-chu',
     LOGIN = '/auth/dang-nhap',
     PAGE = '/auth/trang',
     PRODUCT = '/auth/san-pham',
