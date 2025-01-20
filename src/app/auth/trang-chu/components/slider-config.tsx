@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardContent, CardHeader, CardTitle, FormUpload } from '@/components'
+import { Card, CardContent, CardHeader, CardTitle, FormUploadMultiple } from '@/components'
 
 export const SliderConfig = () => {
     return (
@@ -8,10 +8,8 @@ export const SliderConfig = () => {
             <CardHeader>
                 <CardTitle>Cấu hình Slider</CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-4 gap-2">
-                {Array.from({ length: 4 }).map((_, index) => (
-                    <FormUpload isCompact key={index} name={`sliders.${index}`} />
-                ))}
+            <CardContent>
+                <FormUploadMultiple isCompact name="sliders" />
             </CardContent>
         </Card>
     )
