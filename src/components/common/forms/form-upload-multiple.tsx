@@ -166,7 +166,7 @@ export const FormUploadMultiple = ({
                                         {fileUrls?.map((fileUrl, index) => (
                                             <div
                                                 key={index}
-                                                className={`form-upload-container relative flex aspect-video h-full flex-[150px] cursor-pointer select-none flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-zinc-300 p-1 text-zinc-300 transition-all hover:border-zinc-400 hover:text-zinc-400 ${
+                                                className={`form-upload-container relative flex aspect-video h-full w-[150px] cursor-pointer select-none flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-zinc-300 p-1 text-zinc-300 transition-all hover:border-zinc-400 hover:text-zinc-400 ${
                                                     error?.message &&
                                                     '!border-danger hover:border-danger'
                                                 }`}
@@ -206,7 +206,7 @@ export const FormUploadMultiple = ({
                                             </div>
                                         ))}
 
-                                        <div className="flex aspect-video flex-[150px] cursor-pointer flex-col items-center rounded-lg border-2 border-dashed py-2 text-zinc-400">
+                                        <div className="flex aspect-video w-[150px] cursor-pointer flex-col items-center rounded-lg border-2 border-dashed py-2 text-zinc-400">
                                             <div
                                                 className={`aspect-square ${
                                                     isCompact ? 'w-2/5' : 'w-1/2 md:w-[15%]'

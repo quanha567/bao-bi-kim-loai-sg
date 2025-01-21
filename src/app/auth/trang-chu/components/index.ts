@@ -1,4 +1,6 @@
 export * from './do-you-know-config'
+export * from './extras-config'
+export * from './my-customer-config'
 export * from './product-config'
 export * from './slider-config'
 export * from './success-story'

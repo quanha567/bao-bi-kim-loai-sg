@@ -5,4 +5,5 @@ export const API_URL = {
     SETTING: '/setting',
     ARTICLES: '/articles',
     PAGES: '/pages',
+    HOME_CONFIG: '/home-config',
 }
