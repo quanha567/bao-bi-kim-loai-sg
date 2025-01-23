@@ -2,7 +2,7 @@ import { BaseModel } from './base.model'
 import { ProductModel } from './product.model'
 
 export interface HomeConfigItemModel {
-    image?: string
+    image?: Blob | string
     orderNumber?: number
     title: string
 }
@@ -11,7 +11,7 @@ export interface HomeConfigModel extends BaseModel {
     customerLogos: string[]
     doYouKnows?: HomeConfigItemModel[]
     extras?: HomeConfigItemModel[]
-    products: ProductModel[]
+    products: ProductModel[] | string[]
     sliders: Blob[] | string[]
     successStories?: HomeConfigItemModel[]
 }

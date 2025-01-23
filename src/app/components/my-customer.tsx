@@ -7,18 +7,17 @@ import Image from 'next/image'
 
 import { Typography } from '@/components'
 
-import Logo1 from '@/public/brand1.png'
-import Logo2 from '@/public/brand2.png'
-import Logo3 from '@/public/brand3.png'
-import Logo4 from '@/public/brand4.png'
-import Logo5 from '@/public/brand5.png'
-import Logo6 from '@/public/brand6.png'
-import Logo7 from '@/public/brand7.png'
-import Logo8 from '@/public/brand8.png'
+import { HomeConfigModel } from '@/models'
 
-const logos = [Logo1, Logo2, Logo3, Logo4, Logo5, Logo6, Logo7, Logo8, Logo1, Logo2]
+type MyCustomerProps = Pick<HomeConfigModel, 'customerLogos'>
 
-export const MyCustomer = () => {
+export const MyCustomer = ({ customerLogos }: MyCustomerProps) => {
+    if (!customerLogos?.length) return <></>
+
+    const minItems = 10
+    const repeatCount = Math.ceil(minItems / customerLogos.length)
+    const repeatedLogos = Array(repeatCount).fill(customerLogos).flat().slice(0, minItems) // Ensure exactly `minItems` items
+
     return (
         <div className="py-10">
             <div className="container">
@@ -41,11 +40,13 @@ export const MyCustomer = () => {
                 >
                     {[...new Array(2)].fill(0).map((_, i) => (
                         <React.Fragment key={i}>
-                            {logos.map((src, j) => (
+                            {repeatedLogos.map((src, j) => (
                                 <Image
                                     src={src}
-                                    key={`${i} - ${j}`}
-                                    alt={`${i} - ${j}`}
+                                    width={200}
+                                    height={200}
+                                    key={`${i}-${j}`}
+                                    alt={`Customer logo ${i}-${j}`}
                                     className="h-20 w-auto flex-none object-contain lg:h-32"
                                 />
                             ))}

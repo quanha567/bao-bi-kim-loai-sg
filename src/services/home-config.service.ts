@@ -3,12 +3,23 @@ import { HomeConfigRequestModel } from '@/models'
 
 export const homeConfigService = {
     getHomeConfig: async () => {
-        return await prisma.homeConfig.findFirst()
+        return await prisma.homeConfig.findFirst({
+            select: {
+                products: true,
+                customerLogos: true,
+                doYouKnows: true,
+                extras: true,
+                sliders: true,
+                successStories: true,
+                id: true,
+            },
+        })
     },
     createOrUpdateHomeConfig: async (data: HomeConfigRequestModel) => {
         console.log('createOrUpdateHomeConfig:  data:', data)
-        if (data?.id) {
-            const { id, ...rest } = data
+        const { id, createdAt, updatedAt, ...rest } = data
+
+        if (id) {
             // Ensure the ID is valid before updating
             return await prisma.homeConfig.update({
                 where: { id },
@@ -24,7 +35,7 @@ export const homeConfigService = {
         // Handle create case
         return await prisma.homeConfig.create({
             data: {
-                ...data,
+                ...rest,
                 products: {
                     create:
                         data.products?.map((product) => ({

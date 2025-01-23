@@ -13,17 +13,33 @@ import {
 } from './components'
 import { Button } from '@/components'
 
-import { useCreateOrUpdateHomeConfig, useGetHomeConfig } from '@/hooks'
+import { useCreateOrUpdateHomeConfig, useGetHomeConfig, useToast } from '@/hooks'
 
 const AdminHomePage = () => {
     const formMethods = useForm()
 
+    const { toast } = useToast()
+
     const { data: homeConfig, isLoading: isLoadingHomeConfig } = useGetHomeConfig()
 
-    const { mutate: createOrUpdate } = useCreateOrUpdateHomeConfig()
+    const { mutate: createOrUpdate, isPending: isCreatingOrUpdating } =
+        useCreateOrUpdateHomeConfig()
 
     const handleSubmitForm = (data: any) => {
-        createOrUpdate(data)
+        createOrUpdate(data, {
+            onSuccess: () => {
+                toast({
+                    variant: 'success',
+                    title: 'Cập nhật cấu hình trang chủ thành công!',
+                })
+            },
+            onError: () => {
+                toast({
+                    variant: 'destructive',
+                    title: 'Có lỗi xảy ra vui lòng thử lại sau!',
+                })
+            },
+        })
     }
 
     useEffect(() => {
@@ -33,7 +49,7 @@ const AdminHomePage = () => {
     }, [isLoadingHomeConfig, homeConfig])
 
     return (
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <FormProvider {...formMethods}>
                 <SliderConfig />
                 <ProductConfig />
@@ -41,7 +57,12 @@ const AdminHomePage = () => {
                 <SuccessStory />
                 <MyCustomerConfig />
                 <Extras />
-                <Button onClick={formMethods.handleSubmit(handleSubmitForm)}>Lưu</Button>
+                <Button
+                    isLoading={isCreatingOrUpdating}
+                    onClick={formMethods.handleSubmit(handleSubmitForm)}
+                >
+                    Lưu
+                </Button>
             </FormProvider>
         </div>
     )

@@ -1,17 +1,19 @@
 import Image from 'next/image'
 
-import ProductImg from '@/public/kem.png'
+import { ProductModel } from '@/models'
 
 import { Typography } from './common'
 
-export const ProductItem = () => {
+type ProductItemProps = ProductModel
+
+export const ProductItem = ({ name, image }: ProductItemProps) => {
     return (
         <div className="cursor-pointer space-y-1.5">
-            <div className="overflow-hidden rounded-lg border bg-foreground transition-all hover:scale-105">
-                <Image alt="product" src={ProductImg} />
+            <div className="overflow-hidden rounded-lg border bg-zinc-100 transition-all hover:scale-105">
+                <Image width={300} height={300} alt="product" src={String(image)} />
             </div>
             <Typography variant="bold-lg" className="text-center">
-                Thùng tròn
+                {name}
             </Typography>
         </div>
     )

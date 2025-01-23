@@ -2,26 +2,29 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { homeConfigApi } from '@/apiClient'
 import { QUERY_KEY } from '@/constants'
-import { HomeConfigItemModel, HomeConfigModel } from '@/models'
+import { HomeConfigItemModel, HomeConfigModel, ProductModel } from '@/models'
 
 export const useGetHomeConfig = () => {
     return useQuery({
         queryKey: [QUERY_KEY.HOME_CONFIG],
         queryFn: async (): Promise<HomeConfigModel> => {
             const settingResponse = await homeConfigApi.getOne()
+            console.log('queryFn:  settingResponse:', settingResponse)
             return settingResponse
                 ? {
                       ...settingResponse,
-                      doYouKnows: Array.isArray(settingResponse.doYouKnows)
-                          ? settingResponse.doYouKnows
+                      doYouKnows: settingResponse?.doYouKnows
+                          ? JSON.parse(settingResponse.doYouKnows)
                           : [],
-                      extras: Array.isArray(settingResponse.extras) ? settingResponse.extras : [],
+                      extras: settingResponse?.extras ? JSON.parse(settingResponse.extras) : [],
                       sliders: settingResponse.sliders || [],
-                      successStories: Array.isArray(settingResponse.successStories)
-                          ? settingResponse.successStories
+                      successStories: settingResponse?.successStories
+                          ? JSON.parse(settingResponse.successStories)
                           : [],
                       customerLogos: settingResponse.customerLogos || [],
-                      products: settingResponse.products || [],
+                      products: Array.isArray(settingResponse.products)
+                          ? settingResponse.products.map((p) => (p as ProductModel)?.id)
+                          : [],
                       createdAt: settingResponse.createdAt || '',
                       id: settingResponse.id || '',
                       updatedAt: settingResponse.updatedAt || '',
@@ -46,7 +49,6 @@ export const useCreateOrUpdateHomeConfig = () => {
 
     return useMutation({
         mutationFn: async (data: HomeConfigModel) => {
-            console.log('mutationFn:  data:', data)
             const response = await homeConfigApi.createOrUpdate(data)
             return response
         },

@@ -2,31 +2,13 @@ import Image from 'next/image'
 
 import { Typography } from '@/components'
 
-import Reason1 from '@/public/reason1.png'
-import Reason2 from '@/public/reason2.png'
-import Reason3 from '@/public/reason3.png'
-import Reason4 from '@/public/reason4.png'
+import { HomeConfigModel } from '@/models'
 
-const reasons = [
-    {
-        description: 'Chăm sóc khách hàng chu đáo và chuyên nghiệp',
-        img: Reason1,
-    },
-    {
-        description: 'Công nghệ mới  và hiện đại',
-        img: Reason2,
-    },
-    {
-        description: 'Cơ sở hạ tầng tiềm năng đáp ứng nhu cầu khách hàng',
-        img: Reason3,
-    },
-    {
-        description: 'Bảo vệ môi trường là ưu tiên hàng đầu',
-        img: Reason4,
-    },
-]
+type DidYouKnowProps = Pick<HomeConfigModel, 'doYouKnows'>
 
-export const DidYouKnow = () => {
+export const DidYouKnow = ({ doYouKnows }: DidYouKnowProps) => {
+    if (!doYouKnows?.length) return <></>
+
     return (
         <div className="container py-10">
             <div className="mb-16">
@@ -39,20 +21,22 @@ export const DidYouKnow = () => {
                 <div className="mt-2 h-[1px] w-3/4 max-w-[500px] bg-[#808080] lg:mt-6 lg:w-full"></div>
             </div>
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
-                {reasons.map((reason, index) => (
+                {doYouKnows.map((reason, index) => (
                     <div
                         key={index}
                         className="flex cursor-pointer flex-col items-center gap-2 transition-all hover:-translate-y-2"
                     >
                         <div className="aspect-square w-3/4 overflow-hidden rounded-lg border lg:w-1/2">
                             <Image
-                                alt="reason"
-                                src={reason.img}
+                                width={300}
+                                height={300}
+                                alt={reason.title}
+                                src={String(reason.image)}
                                 className="h-full w-full object-cover"
                             />
                         </div>
                         <Typography className="text-pretty text-center font-medium">
-                            {reason.description}
+                            {reason.title}
                         </Typography>
                     </div>
                 ))}

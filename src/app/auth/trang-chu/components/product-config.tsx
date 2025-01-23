@@ -1,5 +1,5 @@
 'use client'
-import { Card, CardContent, CardHeader, CardTitle, FormSelect } from '@/components'
+import { Card, CardContent, CardHeader, CardTitle, FormMultipleSelect } from '@/components'
 
 import { useGetProductOptions } from '@/hooks'
 
@@ -17,7 +17,7 @@ export const ProductConfig = () => {
                 <CardTitle>Sản phẩm chính</CardTitle>
             </CardHeader>
             <CardContent>
-                <FormSelect
+                <FormMultipleSelect
                     name="products"
                     label="Sản phẩm"
                     options={productOptions}
