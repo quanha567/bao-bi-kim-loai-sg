@@ -45,9 +45,10 @@ export const useDeletePage = () => {
 }
 
 export const useGetPageOptions = (
-    { isEnable, optionKey }: GetOptionType<PageModel> = {
+    { isEnable, optionKey, extraData }: GetOptionType<PageModel> = {
         optionKey: 'id',
         isEnable: true,
+        extraData: [],
     },
 ) => {
     const [pageSearchText, setPageSearchText] = useState<string>('')
@@ -77,10 +78,18 @@ export const useGetPageOptions = (
 
     const pageOptions = (pages?.pages
         .flatMap((page) => page.data || [])
-        .map((item) => ({
-            label: item.name,
-            value: item[optionKey ?? 'id'],
-        })) || []) as SelectOption[]
+        .map((item) => {
+            const option = {
+                label: item.name,
+                value: item[optionKey ?? 'id'],
+            } as SelectOption
+
+            extraData?.forEach((key) => {
+                option[key] = item[key]
+            })
+
+            return option
+        }) || []) as SelectOption[]
 
     const loadMorePageOptions = () => {
         if (hasNextPagePageOptions && !isFetchingNextPagePageOptions) {

@@ -22,6 +22,7 @@ import {
 } from '@/components'
 
 export type SelectOption = {
+    [key: string]: unknown
     label: ReactNode
     value: string
 }

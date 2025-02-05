@@ -21,7 +21,6 @@ import {
 import { useCreateOrUpdateSetting, useGetPageOptions, useGetSetting, useToast } from '@/hooks'
 import { SettingModel } from '@/models'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { title } from 'process'
 
 const formSchema = z.object({
     phoneNumber: z.string().optional(),
@@ -36,7 +35,8 @@ const formSchema = z.object({
             z.object({
                 id: z.string().optional(),
                 pageId: z.string().nonempty('Vui lòng chọn trang liên kết!'),
-                settingId: z.string().optional(),
+                label: z.string().optional(),
+                slug: z.string().optional(),
                 children: z.array(z.object({})).optional(),
             }),
         )
@@ -60,7 +60,9 @@ const SettingPage = () => {
         defaultValues: formDefaultValues,
     })
 
-    const { pageOptions } = useGetPageOptions()
+    const { pageOptions } = useGetPageOptions({
+        extraData: ['targetId'],
+    })
 
     const {
         fields: menuFields,
@@ -71,6 +73,8 @@ const SettingPage = () => {
         name: 'menus',
     })
 
+    const menus = formMethods.watch('menus')
+
     const { data: setting, isLoading: isLoadingSetting } = useGetSetting()
 
     const { mutate: createOrUpdateSetting, isLoading: isLoadingCreateOrUpdateSetting } =
@@ -79,6 +83,28 @@ const SettingPage = () => {
     useEffect(() => {
         formMethods.reset({ ...setting })
     }, [JSON.stringify(setting)])
+
+    useEffect(() => {
+        console.log('menus:', menus)
+
+        menus?.map((menu, index) => {
+            if (menu?.children?.length) {
+                menu?.children?.map((child, i) => {
+                    formMethods.setValue(`menus.${index}.children.${i}`, {
+                        ...child,
+                        label: pageOptions.find((option) => option.value === child.pageId)?.label,
+                        slug: pageOptions.find((option) => option.value === child.pageId)?.targetId,
+                    })
+                })
+            }
+
+            formMethods.setValue(`menus.${index}`, {
+                ...menu,
+                label: pageOptions.find((option) => option.value === menu.pageId)?.label,
+                slug: pageOptions.find((option) => option.value === menu.pageId)?.targetId,
+            })
+        })
+    }, [JSON.stringify(menus), JSON.stringify(pageOptions)])
 
     const handleSubmitForm = (data: SettingModel) => {
         createOrUpdateSetting(data, {
@@ -101,7 +127,6 @@ const SettingPage = () => {
     const handleAddNewMenu = () => {
         appendMenu({
             pageId: '',
-            settingId: setting?.id,
             children: [],
         })
     }

@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { DefaultLayout } from '../DefaultLayout'
+import { AdminLayout } from '../AdminLayout'
 
 export const LayoutWrapper = ({ children }: React.PropsWithChildren) => {
-    return <DefaultLayout>{children}</DefaultLayout>
+    return <AdminLayout>{children}</AdminLayout>
 }

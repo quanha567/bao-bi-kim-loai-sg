@@ -74,6 +74,7 @@ type HeaderBottomProps = SettingRequestModel
 
 export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
     const convertedMenu = (menus ? JSON.parse(menus) : []) as MenuSettingModel[]
+    console.log('HeaderBottom  convertedMenu:', convertedMenu)
 
     return (
         <div className="container flex items-center justify-between py-3">
@@ -89,17 +90,17 @@ export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
                 {Array.isArray(convertedMenu) && convertedMenu.length > 0 ? (
                     <NavigationMenu className="flex-1">
                         <NavigationMenuList>
-                            {convertedMenu.map((item) => {
+                            {convertedMenu.map((item, index) => {
                                 if (!item?.children?.length) {
                                     return (
-                                        <NavigationMenuItem asChild key={item.pageId}>
+                                        <NavigationMenuItem asChild key={index}>
                                             <Link
                                                 passHref
-                                                href={item.pageId}
+                                                href={item.slug || '#'}
                                                 className="select-none rounded-md px-3 py-1.5 transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                                             >
                                                 <Typography as="span" variant="bold-uppercase">
-                                                    {item.pageId}
+                                                    {item.label}
                                                 </Typography>
                                             </Link>
                                         </NavigationMenuItem>
@@ -107,11 +108,11 @@ export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
                                 }
 
                                 return (
-                                    <NavigationMenuItem key={item.title}>
+                                    <NavigationMenuItem key={index}>
                                         <NavigationMenuTrigger>
-                                            <Link passHref href={item.href}>
+                                            <Link passHref href={item.slug || '#'}>
                                                 <Typography as="span" variant="bold-uppercase">
-                                                    {item.title}
+                                                    {item.label}
                                                 </Typography>
                                             </Link>
                                         </NavigationMenuTrigger>
