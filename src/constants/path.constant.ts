@@ -12,4 +12,5 @@ export enum ADMIN_PATH {
 
 export enum DEFAULT_PATH {
     HOME = '/',
+    PRODUCT = '/san-pham',
 }

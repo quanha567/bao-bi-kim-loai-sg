@@ -9,6 +9,7 @@ export async function GET(req: NextRequest) {
     const pageIndex = parseInt(searchParams.get('pageIndex') || '0', 10) // Default to first page
     const searchText = searchParams.get('searchText') || ''
     const sortBy = searchParams.get('sortBy') || 'id'
+    const slug = searchParams.get('slug') || ''
 
     try {
         const { products, total } = await productService.getProducts(
@@ -16,6 +17,7 @@ export async function GET(req: NextRequest) {
             pageSize,
             searchText,
             sortBy,
+            slug,
         )
 
         return NextResponse.json(

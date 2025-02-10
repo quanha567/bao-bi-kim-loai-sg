@@ -24,6 +24,7 @@ export const productService = {
         pageSize: number,
         searchText: string,
         sortBy: string,
+        slug: string,
     ) => {
         const skip = pageIndex * pageSize
 
@@ -51,6 +52,7 @@ export const productService = {
                             },
                         },
                     ],
+                    slug,
                 },
                 include: {
                     category: true,
@@ -74,6 +76,9 @@ export const productService = {
                             },
                         },
                     ],
+                    category: {
+                        slug,
+                    },
                 },
             }),
         ])

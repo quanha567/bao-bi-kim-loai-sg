@@ -24,7 +24,7 @@ export const SuccessStory = ({ successStories }: SuccessStoryProps) => {
                 <Image
                     alt="divider"
                     src={DividerSvg}
-                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F8F8F8] px-4"
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-secondary px-4"
                 />
             </div>
             <div className="mt-4 grid gap-4 lg:mt-10 lg:grid-cols-3 lg:gap-8">
