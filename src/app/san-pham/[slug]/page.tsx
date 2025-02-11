@@ -1,9 +1,9 @@
-import { Plus } from 'lucide-react'
 import React from 'react'
 
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
+import { ProductBreadcrumb, RelativeProduct } from '../components'
 import {
     Carousel,
     CarouselContent,
@@ -25,31 +25,30 @@ const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
     }
 
     return (
-        <div className="container space-y-10 py-10">
+        <div className="container space-y-3 pb-10 pt-4">
+            <ProductBreadcrumb />
             <div className="grid grid-cols-[1fr_2fr] gap-4">
-                <div>
-                    <Carousel className="w-full max-w-xs">
-                        <CarouselContent>
-                            {[productDetail?.image, productDetail?.imageHover]
-                                .filter(Boolean)
-                                .map((img, index) => (
-                                    <CarouselItem key={index}>
-                                        <div className="p-1">
-                                            <Image
-                                                src={img}
-                                                width={500}
-                                                height={500}
-                                                alt={productDetail.name}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        </div>
-                                    </CarouselItem>
-                                ))}
-                        </CarouselContent>
-                        <CarouselPrevious />
-                        <CarouselNext />
-                    </Carousel>
-                </div>
+                <Carousel className="w-full max-w-xs">
+                    <CarouselContent>
+                        {[productDetail?.image, productDetail?.imageHover]
+                            .filter(Boolean)
+                            .map((img, index) => (
+                                <CarouselItem key={index}>
+                                    <div className="p-1">
+                                        <Image
+                                            width={500}
+                                            height={500}
+                                            src={String(img)}
+                                            alt={productDetail.name}
+                                            className="h-full w-full object-cover"
+                                        />
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                    </CarouselContent>
+                    <CarouselPrevious />
+                    <CarouselNext />
+                </Carousel>
                 <div className="space-y-4">
                     <Typography as="h1" variant="h1" className="!text-2xl">
                         {productDetail.name}
@@ -58,7 +57,7 @@ const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
                         Liên hệ
                     </Typography>
 
-                    <div className="space-y-2">
+                    {/* <div className="space-y-2">
                         <Typography as="h5" variant="h5">
                             Thông số sản phẩm
                         </Typography>
@@ -72,25 +71,16 @@ const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
                             <Typography>Kích thước:</Typography>
                             <Typography>190×225</Typography>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="space-y-2">
                         <Typography as="h5" variant="h5">
                             Mô tả sản phẩm
                         </Typography>
-                        <Typography>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod corrupti
-                            similique error repudiandae neque eveniet accusamus soluta ex dolore
-                            eum, minima sapiente porro eaque veritatis voluptates dolores inventore
-                            harum possimus.
-                        </Typography>
+                        <Typography>{productDetail?.description}</Typography>
                     </div>
                 </div>
             </div>
-            <div>
-                <Typography as="h5" variant="h5">
-                    Sản phẩm liên quan
-                </Typography>
-            </div>
+            <RelativeProduct productId={productDetail?.id} slug={productDetail?.category?.slug} />
         </div>
     )
 }

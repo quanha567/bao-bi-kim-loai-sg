@@ -1,17 +1,19 @@
 import { ListCategory, ListProduct } from './components'
-import { Checkbox, Typography } from '@/components'
+import { Typography } from '@/components'
+
+import { categoryApi } from '@/apiClient'
 
 const v = [0.5, 1, 5, 20]
 const sizes = ['Ø 190×225', 'Ø 155×170', 'Ø 110×100', 'Ø 100×75']
 
 const ProductPage = async () => {
-    const categories = await fetch('http://localhost:3000/api/categories').then((res) => res.json())
+    const categories = await categoryApi.getAll()
 
     return (
         <div className="container grid grid-cols-[300px_1fr] divide-x-[1px] py-10">
             <div className="space-y-4 pr-4">
                 <ListCategory categories={categories} />
-                <div>
+                {/* <div>
                     <div className="mb-2 w-fit border-b border-[#808080] pb-1">
                         <Typography as="h3" variant="bold-lg">
                             Dung tích
@@ -48,7 +50,7 @@ const ProductPage = async () => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
             </div>
             <div className="pl-4">
                 <Typography as="h1" variant="h1" className="text-center">
@@ -58,7 +60,7 @@ const ProductPage = async () => {
                     Một số dòng sản phẩm nổi bật của công ty chúng tôi đang kinh doanh hiện nay trên
                     thị trường
                 </Typography>
-                <ListProduct />
+                <ListProduct categories={categories} />
             </div>
         </div>
     )

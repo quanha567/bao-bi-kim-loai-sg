@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
     const searchText = searchParams.get('searchText') || ''
     const sortBy = searchParams.get('sortBy') || 'id'
     const slug = searchParams.get('slug') || ''
+    const category = searchParams.get('category') || ''
 
     try {
         const { products, total } = await productService.getProducts(
@@ -18,6 +19,7 @@ export async function GET(req: NextRequest) {
             searchText,
             sortBy,
             slug,
+            category,
         )
 
         return NextResponse.json(

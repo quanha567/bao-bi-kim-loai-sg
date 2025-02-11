@@ -11,5 +11,6 @@ export enum QUERY_KEY {
     PRODUCT = 'product',
     PRODUCT_OPTIONS = 'PRODUCT_OPTIONS',
     PRODUCTS = 'products',
+    RELATIVE_PRODUCTS = 'RELATIVE_PRODUCTS',
     SETTING = 'SETTING',
 }

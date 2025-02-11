@@ -6,7 +6,6 @@ import { SettingRequestModel } from '@/models'
 
 export const DefaultLayout = async ({ children }: React.PropsWithChildren) => {
     const setting = await getData()
-    console.log('DefaultLayout  setting:', setting)
 
     return (
         <div className="layout">

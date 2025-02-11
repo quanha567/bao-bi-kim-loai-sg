@@ -21,6 +21,7 @@ import {
     DialogTitle,
     FormInput,
     FormSelect,
+    FormTextarea,
     FormUpload,
     ModalConfirm,
     TableButtonWrapper,
@@ -53,6 +54,7 @@ const initialValues: Partial<ProductModel> = {
     },
     image: undefined,
     imageHover: undefined,
+    description: '',
 }
 
 const formSchema = z.object({
@@ -64,6 +66,7 @@ const formSchema = z.object({
     }),
     image: z.instanceof(Blob).or(z.string()).optional(),
     imageHover: z.instanceof(Blob).or(z.string()).optional(),
+    description: z.string().optional(),
 })
 
 const AdminProductPage = () => {
@@ -290,6 +293,7 @@ const AdminProductPage = () => {
                                 isLoadingMore={isFetchingNextPageCategoryOptions}
                             />
                             <FormInput name="slug" label="Slug" />
+                            <FormTextarea name="description" label="Mô tả sản phẩm" />
                         </FormProvider>
                     </div>
                     <DialogFooter>

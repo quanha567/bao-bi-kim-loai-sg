@@ -24,9 +24,31 @@ export const productService = {
         pageSize: number,
         searchText: string,
         sortBy: string,
-        slug: string,
+        slug: string, // Để slug là optional
+        category: string, // Để category là optional
     ) => {
         const skip = pageIndex * pageSize
+
+        const whereCondition = {
+            OR: [
+                {
+                    name: {
+                        contains: searchText,
+                        mode: 'insensitive',
+                    },
+                },
+                {
+                    category: {
+                        name: {
+                            contains: searchText,
+                            mode: 'insensitive',
+                        },
+                    },
+                },
+            ],
+            ...(slug ? { slug } : {}), // Nếu có slug thì lọc theo slug, nếu không thì bỏ qua
+            ...(category ? { category: { slug: category } } : {}), // Nếu có category thì lọc, nếu không thì bỏ qua
+        }
 
         const [products, total] = await prisma.$transaction([
             prisma.product.findMany({
@@ -35,51 +57,13 @@ export const productService = {
                 },
                 skip,
                 take: pageSize,
-                where: {
-                    OR: [
-                        {
-                            name: {
-                                contains: searchText,
-                                mode: 'insensitive',
-                            },
-                        },
-                        {
-                            category: {
-                                name: {
-                                    contains: searchText,
-                                    mode: 'insensitive',
-                                },
-                            },
-                        },
-                    ],
-                    slug,
-                },
+                where: whereCondition,
                 include: {
                     category: true,
                 },
             }),
             prisma.product.count({
-                where: {
-                    OR: [
-                        {
-                            name: {
-                                contains: searchText,
-                                mode: 'insensitive',
-                            },
-                        },
-                        {
-                            category: {
-                                name: {
-                                    contains: searchText,
-                                    mode: 'insensitive',
-                                },
-                            },
-                        },
-                    ],
-                    category: {
-                        slug,
-                    },
-                },
+                where: whereCondition,
             }),
         ])
 

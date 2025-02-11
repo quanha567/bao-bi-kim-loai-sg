@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 import { Typography } from '@/components'
 
+import { DEFAULT_PATH } from '@/constants'
 import { CategoryModel } from '@/models'
 
 interface ListCategoryProps {
@@ -20,10 +21,10 @@ export const ListCategory = ({ categories = [] }: ListCategoryProps) => {
                 {categories.map((category, index) => (
                     <Link
                         key={index}
-                        className="py-1 hover:underline"
-                        href={`/san-pham?category=${category.slug}`}
+                        className={`py-1 hover:underline`}
+                        href={`${DEFAULT_PATH.PRODUCT}?category=${category.slug}`}
                     >
-                        <Typography as="span" variant="link">
+                        <Typography as="span" variant="link" className="!text-current">
                             {category.name} ({category.products?.length || 0})
                         </Typography>
                     </Link>

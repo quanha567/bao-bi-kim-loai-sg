@@ -74,7 +74,6 @@ type HeaderBottomProps = SettingRequestModel
 
 export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
     const convertedMenu = (menus ? JSON.parse(menus) : []) as MenuSettingModel[]
-    console.log('HeaderBottom  convertedMenu:', convertedMenu)
 
     return (
         <div className="container flex items-center justify-between py-3">
