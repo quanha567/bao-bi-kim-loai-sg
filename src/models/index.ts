@@ -1,6 +1,7 @@
 export * from './article.model'
 export * from './base.model'
 export * from './category.model'
+export * from './contact.model'
 export * from './home-config.model'
 export * from './home-config.model'
 export * from './image.model'

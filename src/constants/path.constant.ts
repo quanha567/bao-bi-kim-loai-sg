@@ -11,6 +11,7 @@ export enum ADMIN_PATH {
 }
 
 export enum DEFAULT_PATH {
+    ARTICLE = '/bai-viet',
     HOME = '/',
     PRODUCT = '/san-pham',
 }

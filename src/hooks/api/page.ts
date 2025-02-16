@@ -65,7 +65,7 @@ export const useGetPageOptions = (
         queryKey: [QUERY_KEY.PAGE_OPTIONS, pageSearchTextDebounce],
         queryFn: ({ pageParam }) =>
             pageApi.search({
-                pageSize: 10,
+                pageSize: 100,
                 pageIndex: pageParam,
                 searchText: pageSearchTextDebounce,
             }),
