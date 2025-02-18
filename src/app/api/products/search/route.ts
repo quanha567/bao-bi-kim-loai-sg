@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     const pageSize = parseInt(searchParams.get('pageSize') || '10', 10)
     const pageIndex = parseInt(searchParams.get('pageIndex') || '0', 10) // Default to first page
     const searchText = searchParams.get('searchText') || ''
-    const sortBy = searchParams.get('sortBy') || 'id'
+    const sortBy = searchParams.get('sortBy') || 'createdAt'
     const slug = searchParams.get('slug') || ''
     const category = searchParams.get('category') || ''
 

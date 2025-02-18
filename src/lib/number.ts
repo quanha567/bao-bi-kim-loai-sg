@@ -3,7 +3,9 @@
  * @param phoneNumber The input phone number (string).
  * @returns The formatted phone number or an error message if invalid.
  */
-export const formatVietnamesePhoneNumber = (phoneNumber: string): string => {
+export const formatVietnamesePhoneNumber = (phoneNumber?: string): string => {
+    if (!phoneNumber) return ''
+
     // Remove all non-digit characters
     const cleaned = phoneNumber.replace(/\D/g, '')
 

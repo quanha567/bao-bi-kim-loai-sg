@@ -1,6 +1,7 @@
 import { DefaultFooter, DefaultHeader } from '../components'
 
 import { API_URL } from '@/constants'
+import { AppProvider } from '@/contexts'
 import { getApiUrl } from '@/lib'
 import { SettingRequestModel } from '@/models'
 
@@ -10,7 +11,9 @@ export const DefaultLayout = async ({ children }: React.PropsWithChildren) => {
     return (
         <div className="layout">
             <DefaultHeader {...setting} />
-            <main>{children}</main>
+            <AppProvider setting={setting}>
+                <main>{children}</main>
+            </AppProvider>
             <DefaultFooter {...setting} />
         </div>
     )

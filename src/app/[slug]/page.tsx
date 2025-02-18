@@ -8,14 +8,18 @@ import { RelativeArticle, Typography } from '@/components'
 
 import 'react-quill-new/dist/quill.snow.css'
 
-import { articleApi } from '@/apiClient'
-import { formatDate } from '@/lib'
+import { API_URL } from '@/constants'
+import { formatDate, getApiUrl } from '@/lib'
+
+const fetchArticle = (slug: string) => {
+    return fetch(getApiUrl(`${API_URL.ARTICLES}/${slug}`)).then((res) => res.json())
+}
 
 const ArticleDetail = async ({ params }: Readonly<{ params: { slug: string } }>) => {
     headers()
 
     const { slug } = params
-    const article = await articleApi.getOne(slug)
+    const article = await fetchArticle(slug)
 
     if (!article) {
         return notFound()

@@ -1,9 +1,12 @@
+import { headers } from 'next/headers'
+
 import { ArticleItem, LatestArticle } from './components'
 import { Button, Typography } from '@/components'
 
 import { articleApi } from '@/apiClient'
 
 const NewsPage = async () => {
+    headers()
     const blogs = await articleApi.search({})
 
     return (

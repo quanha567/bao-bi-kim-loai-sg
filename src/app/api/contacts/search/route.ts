@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { categoryService } from '@/services'
+import { contactService } from '@/services'
 
-export async function GET(req: NextRequest) {
+export const GET = async (req: NextRequest) => {
     const { searchParams } = new URL(req.url)
 
     const pageSize = parseInt(searchParams.get('pageSize') || '10', 10)
@@ -11,16 +11,16 @@ export async function GET(req: NextRequest) {
     const sortBy = searchParams.get('sortBy') || 'createdAt'
 
     try {
-        const { categories, total } = await categoryService.getCategories(
+        const { contacts, total } = await contactService.searchContacts({
             pageIndex,
             pageSize,
             searchText,
             sortBy,
-        )
+        })
 
         return NextResponse.json(
             {
-                data: categories,
+                data: contacts,
                 pageIndex,
                 pageSize,
                 totalElements: total,

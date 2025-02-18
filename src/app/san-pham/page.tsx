@@ -1,3 +1,5 @@
+import { headers } from 'next/headers'
+
 import { ListCategory, ListProduct } from './components'
 import { Typography } from '@/components'
 
@@ -7,6 +9,7 @@ const v = [0.5, 1, 5, 20]
 const sizes = ['Ø 190×225', 'Ø 155×170', 'Ø 110×100', 'Ø 100×75']
 
 const ProductPage = async () => {
+    headers()
     const categories = await categoryApi.getAll()
 
     return (

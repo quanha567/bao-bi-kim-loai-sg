@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { headers } from 'next/headers'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
@@ -13,11 +14,17 @@ import {
     Typography,
 } from '@/components'
 
-import { productApi } from '@/apiClient'
+import { API_URL } from '@/constants'
+import { getApiUrl } from '@/lib'
+
+const fetchProduct = (slug: string) => {
+    return fetch(getApiUrl(`${API_URL.PRODUCTS}/${slug}`)).then((res) => res.json())
+}
 
 const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
+    headers()
     const { slug } = params
-    const product = await productApi.search({ slug })
+    const product = await fetchProduct(slug)
     const productDetail = product?.data?.[0]
 
     if (!productDetail) {

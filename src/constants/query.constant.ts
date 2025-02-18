@@ -13,4 +13,6 @@ export enum QUERY_KEY {
     PRODUCTS = 'products',
     RELATIVE_PRODUCTS = 'RELATIVE_PRODUCTS',
     SETTING = 'SETTING',
+    APP_CONFIG = "APP_CONFIG",
+    CONTACTS = "CONTACTS",
 }

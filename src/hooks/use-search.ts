@@ -6,10 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 interface UseTableProps {
     initialAscending?: boolean
-    initialPageIndex?: number
     initialSortColumn?: null | string
-    pageSize: number
-    totalElements: number
 }
 
 export const useSearch = ({ initialAscending = true, initialSortColumn = null }: UseTableProps) => {

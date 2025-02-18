@@ -9,7 +9,7 @@ export const useGetHomeConfig = () => {
         queryKey: [QUERY_KEY.HOME_CONFIG],
         queryFn: async (): Promise<HomeConfigModel> => {
             const settingResponse = await homeConfigApi.getOne()
-            console.log('queryFn:  settingResponse:', settingResponse)
+
             return settingResponse
                 ? {
                       ...settingResponse,

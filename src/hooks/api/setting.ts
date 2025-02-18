@@ -9,7 +9,6 @@ export const useGetSetting = () => {
         queryKey: [QUERY_KEY.SETTING],
         queryFn: async () => {
             const settingResponse = await settingApi.getOne()
-            console.log('queryFn:  settingResponse:', settingResponse)
             return settingResponse
                 ? {
                       ...settingResponse,
