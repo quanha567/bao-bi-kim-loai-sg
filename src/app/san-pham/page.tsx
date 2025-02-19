@@ -1,79 +1,22 @@
-import Link from 'next/link'
+import { ListCategory, ListProduct } from './components'
+import { Typography } from '@/components'
 
-import {
-    Checkbox,
-    ProductItem,
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-    Typography,
-} from '@/components'
+import { API_URL } from '@/constants'
+import { getApiUrl } from '@/lib'
+import { CategoryModel } from '@/models'
 
-const categories = [
-    {
-        name: 'Thùng, lon tròn sơn hóa chất',
-        quantity: 6,
-    },
-    {
-        name: 'Thùng, lon vuông sơn hóa chất',
-        quantity: 6,
-    },
-    {
-        name: 'Thùng, lon hóa chất khác',
-        quantity: 6,
-    },
-    {
-        name: 'Hộp bánh kẹo tròn',
-        quantity: 6,
-    },
-    {
-        name: 'Hộp bánh kẹo vuông, chữ nhật',
-        quantity: 6,
-    },
-    {
-        name: 'Hộp mỹ nghệ',
-        quantity: 6,
-    },
-    {
-        name: 'Lon sữa',
-        quantity: 6,
-    },
-    {
-        name: 'Hộp trà',
-        quantity: 6,
-    },
-    {
-        name: 'Nắp nút các loại',
-        quantity: 6,
-    },
-]
+const fetchCategories = (): Promise<CategoryModel[]> => {
+    return fetch(getApiUrl(API_URL.CATEGORIES)).then((res) => res.json())
+}
 
-const v = [0.5, 1, 5, 20]
-const sizes = ['Ø 190×225', 'Ø 155×170', 'Ø 110×100', 'Ø 100×75']
+const ProductPage = async () => {
+    const categories = await fetchCategories()
 
-const ProductPage = () => {
     return (
         <div className="container grid grid-cols-[300px_1fr] divide-x-[1px] py-10">
             <div className="space-y-4 pr-4">
-                <div>
-                    <div className="mb-2 w-fit border-b border-[#808080] pb-1">
-                        <Typography as="h3" variant="bold-lg">
-                            Danh mục sản phẩm
-                        </Typography>
-                    </div>
-                    <div className="flex flex-col">
-                        {categories.map((category, index) => (
-                            <Link href={'#'} key={index} className="py-1 hover:underline">
-                                <Typography as="span" variant="link">
-                                    {category.name} ({category.quantity})
-                                </Typography>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-                <div>
+                <ListCategory categories={categories} />
+                {/* <div>
                     <div className="mb-2 w-fit border-b border-[#808080] pb-1">
                         <Typography as="h3" variant="bold-lg">
                             Dung tích
@@ -110,7 +53,7 @@ const ProductPage = () => {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
             </div>
             <div className="pl-4">
                 <Typography as="h1" variant="h1" className="text-center">
@@ -120,31 +63,7 @@ const ProductPage = () => {
                     Một số dòng sản phẩm nổi bật của công ty chúng tôi đang kinh doanh hiện nay trên
                     thị trường
                 </Typography>
-                <div className="mt-6">
-                    <div className="space-y-2">
-                        <Typography as="h5" variant="h5">
-                            THÙNG, LON TRÒN SƠN HÓA CHẤT
-                        </Typography>
-                        <div className="flex items-center justify-between">
-                            <Typography>Sản phẩm (10)</Typography>
-                            <Select>
-                                <SelectTrigger className="w-[180px] bg-white">
-                                    <SelectValue placeholder="Sắp xếp theo" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="light">Bán chạy nhất</SelectItem>
-                                    <SelectItem value="dark">Phổ biến nhất</SelectItem>
-                                    <SelectItem value="system">Mới nhất</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-                    <div className="mt-4 grid grid-cols-4 gap-4">
-                        {Array.from({ length: 10 }, (_, index) => (
-                            <ProductItem key={index} />
-                        ))}
-                    </div>
-                </div>
+                <ListProduct categories={categories} />
             </div>
         </div>
     )

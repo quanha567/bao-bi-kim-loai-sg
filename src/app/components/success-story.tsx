@@ -2,26 +2,13 @@ import Image from 'next/image'
 
 import { Typography } from '@/components'
 
+import { HomeConfigModel } from '@/models'
 import DividerSvg from '@/public/divider.svg'
-import StoryImg1 from '@/public/story1.jpg'
-import StoryImg2 from '@/public/story2.jpg'
-import StoryImg3 from '@/public/story3.jpg'
 
-export const SuccessStory = () => {
-    const stories = [
-        {
-            img: StoryImg1,
-            title: 'Tận tâm với khách hàng',
-        },
-        {
-            img: StoryImg2,
-            title: 'Tập thể đoàn kết ',
-        },
-        {
-            img: StoryImg3,
-            title: 'Cải tiến công nghệ',
-        },
-    ]
+type SuccessStoryProps = Pick<HomeConfigModel, 'successStories'>
+
+export const SuccessStory = ({ successStories }: SuccessStoryProps) => {
+    if (!successStories?.length) return
 
     return (
         <div className="container flex flex-col items-center py-6 lg:py-10">
@@ -37,21 +24,23 @@ export const SuccessStory = () => {
                 <Image
                     alt="divider"
                     src={DividerSvg}
-                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F8F8F8] px-4"
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-secondary px-4"
                 />
             </div>
             <div className="mt-4 grid gap-4 lg:mt-10 lg:grid-cols-3 lg:gap-8">
-                {stories.map((story, index) => (
+                {successStories.map((story, index) => (
                     <div key={index} className="relative overflow-hidden rounded-lg">
                         <Image
-                            alt="story"
-                            src={story.img}
+                            width={500}
+                            height={500}
+                            alt={story.title}
+                            src={String(story.image)}
                             className="aspect-square w-full object-cover"
                         />
                         <div className="absolute inset-0 bg-black/20"></div>
                         <Typography
                             variant="h3"
-                            className="absolute left-1/2 top-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 text-pretty text-center text-3xl text-white"
+                            className="absolute left-1/2 top-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 text-pretty break-all text-center !text-4xl text-white"
                         >
                             {story.title}
                         </Typography>

@@ -30,7 +30,7 @@ const PaginationItem = React.forwardRef<
 >(({ className, disabled, ...props }, ref) => (
     <li
         ref={ref}
-        className={cn('', className, disabled ? 'cursor-not-allowed opacity-60' : '')}
+        className={cn('', className, disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer')}
         {...props}
     />
 ))
@@ -50,6 +50,9 @@ const PaginationLink = ({ className, isActive, size = 'icon', ...props }: Pagina
                 variant: isActive ? 'outline' : 'ghost',
             }),
             className,
+            isActive
+                ? 'cursor-not-allowed bg-primary text-white hover:bg-primary hover:text-white'
+                : 'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
         )}
         {...props}
     />

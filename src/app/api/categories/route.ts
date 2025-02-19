@@ -19,6 +19,16 @@ export async function DELETE(req: NextRequest) {
     }
 }
 
+export async function GET() {
+    try {
+        const categories = await categoryService.getAll()
+        return NextResponse.json(categories, { status: 200 })
+    } catch (error) {
+        console.log('🚀 -> GET -> error:', error)
+        return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
+    }
+}
+
 export async function PATCH(req: NextRequest) {
     const { id, name, slug } = await req.json()
 

@@ -1,6 +1,12 @@
 import { ProductItem, Typography } from '@/components'
 
-export const TopProduct = () => {
+import { HomeConfigModel, ProductModel } from '@/models'
+
+type TopProductProps = Pick<HomeConfigModel, 'products'>
+
+export const TopProduct = ({ products }: TopProductProps) => {
+    if (!products?.length) return <></>
+
     return (
         <div className="container flex flex-col items-center py-4 lg:py-10">
             <div className="mb-5 h-12 w-[1px] bg-[#808080] lg:h-[120px]"></div>
@@ -11,8 +17,8 @@ export const TopProduct = () => {
                 BAO BÌ KIM LOẠI SÀI GÒN SAMEPACK
             </Typography>
             <div className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
-                {Array.from({ length: 4 }).map((_, index) => (
-                    <ProductItem key={index} />
+                {(products as ProductModel[]).map((product) => (
+                    <ProductItem key={product?.id} {...product} />
                 ))}
             </div>
         </div>

@@ -11,10 +11,13 @@ import {
     CarouselPrevious,
 } from '@/components'
 
-import Article from '@/public/article.jpg'
-import Banner from '@/public/banner.png'
+import { HomeConfigModel } from '@/models'
 
-export const HomeCarousel = () => {
+type HomeCarouselProps = Pick<HomeConfigModel, 'sliders'>
+
+export const HomeCarousel = ({ sliders }: HomeCarouselProps) => {
+    if (!sliders?.length) return <></>
+
     return (
         <Carousel
             className="w-full"
@@ -28,10 +31,16 @@ export const HomeCarousel = () => {
             ]}
         >
             <CarouselContent>
-                {[Banner, Article].map((src, index) => (
+                {sliders.map((src, index) => (
                     <CarouselItem key={index}>
                         <div className="aspect-video lg:aspect-[21/9]">
-                            <Image src={src} alt="banner" className="h-full w-full object-cover" />
+                            <Image
+                                width={1920}
+                                alt="banner"
+                                height={1080}
+                                src={String(src)}
+                                className="h-full w-full object-cover"
+                            />
                         </div>
                     </CarouselItem>
                 ))}

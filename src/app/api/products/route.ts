@@ -1,18 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import { ProductModel, ProductModel } from '@/models'
+import { ProductModel } from '@/models'
 import { categoryService, imageService, productService } from '@/services'
 
 export async function DELETE(req: NextRequest) {
     const { searchParams } = new URL(req.url)
     const ids = searchParams.getAll('ids')
+
     try {
         if (ids.length === 0) {
             return NextResponse.json({ error: 'Missing ids' }, { status: 400 })
         }
 
-        const category = await productService.deleteProducts(ids)
-        return NextResponse.json(category, { status: 200 })
+        const product = await productService.deleteProducts(ids)
+        return NextResponse.json(product, { status: 200 })
     } catch (error) {
         console.log('🚀 -> DELETE -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
@@ -20,14 +21,47 @@ export async function DELETE(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-    const data = (await req.json()) as ProductModel
+    const formData = await req.formData()
+    const data = formData.get('data')
+    const image = formData.get('image')
+    const imageHover = formData.get('imageHover')
+
+    if (!data) {
+        return NextResponse.json({ error: 'Missing data' }, { status: 400 })
+    }
+
+    const productData = JSON.parse(data as string) as ProductModel
+    const { name, slug } = productData
+
+    let validateSlug = slug
 
     try {
-        const category = await productService.updateProduct(data)
+        if (!validateSlug) {
+            validateSlug = await categoryService.generateSlug(name)
+        }
 
-        return NextResponse.json(category, { status: 200 })
+        productData.slug = validateSlug
+
+        // Start image uploads in parallel
+        const imageUploadPromises: Promise<any>[] = []
+        if (image) {
+            imageUploadPromises.push(imageService.uploadImage(image as File))
+        }
+        if (imageHover) {
+            imageUploadPromises.push(imageService.uploadImage(imageHover as File))
+        }
+
+        // Wait for all uploads
+        const [imageResponse, imageHoverResponse] = await Promise.all(imageUploadPromises)
+
+        // Update productData with uploaded image URLs
+        if (imageResponse) productData.image = imageResponse.url
+        if (imageHoverResponse) productData.imageHover = imageHoverResponse.url
+
+        const product = await productService.updateProduct(productData)
+        return NextResponse.json(product, { status: 200 })
     } catch (error) {
-        console.log('🚀 -> PUT -> error:', error)
+        console.error('🚀 -> POST -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
     }
 }
@@ -35,35 +69,45 @@ export async function PATCH(req: NextRequest) {
 export async function POST(req: NextRequest) {
     const formData = await req.formData()
     const data = formData.get('data')
-    const file = formData.get('file')
+    const image = formData.get('image')
+    const imageHover = formData.get('imageHover')
 
     if (!data) {
         return NextResponse.json({ error: 'Missing data' }, { status: 400 })
     }
 
     const productData = JSON.parse(data as string) as ProductModel
-
     const { name, slug } = productData
 
     let validateSlug = slug
 
     try {
         if (!validateSlug) {
-            // Generate slug if not provided
             validateSlug = await categoryService.generateSlug(name)
         }
 
-        if (file) {
-            const imageResponse = await imageService.uploadImage(file as File)
-            productData.image = imageResponse.url
+        productData.slug = validateSlug
+
+        // Start image uploads in parallel
+        const imageUploadPromises: Promise<any>[] = []
+        if (image) {
+            imageUploadPromises.push(imageService.uploadImage(image as File))
+        }
+        if (imageHover) {
+            imageUploadPromises.push(imageService.uploadImage(imageHover as File))
         }
 
-        productData.slug = validateSlug
-        const category = await productService.createProduct(productData)
+        // Wait for all uploads
+        const [imageResponse, imageHoverResponse] = await Promise.all(imageUploadPromises)
 
-        return NextResponse.json(category, { status: 201 })
+        // Update productData with uploaded image URLs
+        if (imageResponse) productData.image = imageResponse.url
+        if (imageHoverResponse) productData.imageHover = imageHoverResponse.url
+
+        const product = await productService.createProduct(productData)
+        return NextResponse.json(product, { status: 201 })
     } catch (error) {
-        console.log('🚀 -> POST -> error:', error)
+        console.error('🚀 -> POST -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
     }
 }

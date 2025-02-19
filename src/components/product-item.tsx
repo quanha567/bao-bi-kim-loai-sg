@@ -1,18 +1,28 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
-import ProductImg from '@/public/kem.png'
+import { DEFAULT_PATH } from '@/constants'
+import { ProductModel } from '@/models'
 
 import { Typography } from './common'
 
-export const ProductItem = () => {
+type ProductItemProps = ProductModel
+
+export const ProductItem = ({ name, image, slug }: ProductItemProps) => {
     return (
-        <div className="cursor-pointer space-y-1.5">
-            <div className="overflow-hidden rounded-lg border bg-foreground transition-all hover:scale-105">
-                <Image alt="product" src={ProductImg} />
+        <Link className="cursor-pointer space-y-1.5" href={`${DEFAULT_PATH.PRODUCT}/${slug}`}>
+            <div className="aspect-square overflow-hidden rounded-lg border bg-white transition-all hover:scale-105">
+                {image && (
+                    <Image
+                        width={300}
+                        height={300}
+                        alt="product"
+                        src={String(image)}
+                        className="!size-full object-contain"
+                    />
+                )}
             </div>
-            <Typography variant="bold-lg" className="text-center">
-                Thùng tròn
-            </Typography>
-        </div>
+            <Typography className="line-clamp-2 text-center font-semibold">{name}</Typography>
+        </Link>
     )
 }

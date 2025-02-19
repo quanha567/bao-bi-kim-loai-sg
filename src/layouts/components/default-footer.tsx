@@ -6,16 +6,13 @@ import Link from 'next/link'
 import { Typography } from '@/components'
 
 import { formatVietnamesePhoneNumber, getLink } from '@/lib'
+import { SettingRequestModel } from '@/models'
 import FbIcon from '@/public/fb-icon.png'
 import Logo from '@/public/logo.jpg'
 import YtbIcon from '@/public/ytb-icon.png'
 import ZaLoIcon from '@/public/zalo-icon.png'
 
-interface DefaultFooterProps {
-    address: string
-    mail: string
-    phoneNumber: string
-}
+type DefaultFooterProps = SettingRequestModel
 
 const productCategories = [
     'Thùng lon tròn',
@@ -25,24 +22,24 @@ const productCategories = [
     'Nắp nút các loại',
 ]
 
-export const DefaultFooter = ({ address, mail, phoneNumber }: DefaultFooterProps) => {
+export const DefaultFooter = ({ address, email, phoneNumber }: DefaultFooterProps) => {
     const contactMenu = [
-        {
+        address && {
             href: getLink('maps', address),
             Icon: MapPin,
             text: address,
         },
-        {
+        phoneNumber && {
             href: getLink('phone', phoneNumber),
             Icon: PhoneCall,
             text: formatVietnamesePhoneNumber(phoneNumber),
         },
-        {
-            href: getLink('mail', mail),
+        email && {
+            href: getLink('mail', email),
             Icon: Mail,
-            text: mail,
+            text: email,
         },
-    ]
+    ].filter((item) => typeof item === 'object')
 
     const socials = [
         {

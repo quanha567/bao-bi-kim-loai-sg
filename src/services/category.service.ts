@@ -17,7 +17,7 @@ export const categoryService = {
         const [categories, total] = await prisma.$transaction([
             prisma.category.findMany({
                 orderBy: {
-                    [sortBy]: 'asc',
+                    [sortBy]: 'desc',
                 },
                 skip,
                 take: pageSize,
@@ -26,6 +26,12 @@ export const categoryService = {
                         contains: searchText,
                         mode: 'insensitive',
                     },
+                },
+                select: {
+                    products: true,
+                    id: true,
+                    name: true,
+                    slug: true,
                 },
             }),
             prisma.category.count({
@@ -40,7 +46,30 @@ export const categoryService = {
 
         return { categories, total }
     },
-    updateCategory: async (id: string, name: string, slug: string) =>
-        prisma.category.update({ data: { name, slug }, where: { id } }),
-    generateSlug: (name: string) => name.toLowerCase().replace(/\s+/g, '-'),
+    updateCategory: async (id: string, name: string, slug: string) => {
+        return prisma.category.update({ data: { name, slug }, where: { id } })
+    },
+    generateSlug: (name: string) =>
+        name
+            .toLowerCase() // Convert to lowercase
+            .normalize('NFD') // Normalize to decompose special characters
+            .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
+            .replace(/[^a-z0-9\s-]/g, '') // Remove invalid characters (keep spaces and hyphens)
+            .replace(/\s+/g, '-') // Replace spaces with hyphens
+            .replace(/-+/g, '-') // Collapse multiple hyphens into one
+            .trim() // Remove leading and trailing spaces or hyphens
+            .replace(/^-|-$/g, ''),
+    getAll: async () =>
+        prisma.category.findMany({
+            select: {
+                products: {
+                    select: {
+                        id: true,
+                    },
+                },
+                name: true,
+                id: true,
+                slug: true,
+            },
+        }),
 }

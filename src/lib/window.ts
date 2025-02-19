@@ -1,5 +1,7 @@
 // utils/openLink.ts
-export const openLink = (type: 'mail' | 'maps' | 'phone', value: string) => {
+export const openLink = (type: 'mail' | 'maps' | 'phone', value?: string) => {
+    if (!value) return
+
     switch (type) {
         case 'mail':
             window.open(`mailto:${value}`, '_blank')
@@ -15,7 +17,9 @@ export const openLink = (type: 'mail' | 'maps' | 'phone', value: string) => {
     }
 }
 
-export const getLink = (type: 'mail' | 'maps' | 'phone', value: string): string => {
+export const getLink = (type: 'mail' | 'maps' | 'phone', value?: string): string => {
+    if (!value) return '#'
+
     switch (type) {
         case 'mail':
             return `mailto:${value}`

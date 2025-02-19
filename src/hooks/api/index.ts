@@ -1,1 +1,7 @@
+export * from './article'
 export * from './category'
+export * from './contact'
+export * from './home-config'
+export * from './page'
+export * from './product'
+export * from './setting'
