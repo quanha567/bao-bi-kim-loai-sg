@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { headers } from 'next/headers'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
@@ -18,12 +17,11 @@ import { API_URL } from '@/constants'
 import { getApiUrl } from '@/lib'
 
 const fetchProduct = (slug: string) => {
-    return fetch(getApiUrl(`${API_URL.PRODUCTS}/${slug}`)).then((res) => res.json())
+    return fetch(getApiUrl(`${API_URL.PRODUCTS}/search?slug=${slug}`)).then((res) => res.json())
 }
 
 const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
-    headers()
-    const { slug } = params
+    const { slug } = await params
     const product = await fetchProduct(slug)
     const productDetail = product?.data?.[0]
 
@@ -31,27 +29,27 @@ const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
         return notFound()
     }
 
+    const productImages = [productDetail?.image, productDetail?.imageHover].filter(Boolean)
+
     return (
         <div className="container space-y-3 pb-10 pt-4">
             <ProductBreadcrumb />
             <div className="grid grid-cols-[1fr_2fr] gap-4">
                 <Carousel className="w-full max-w-xs">
                     <CarouselContent>
-                        {[productDetail?.image, productDetail?.imageHover]
-                            .filter(Boolean)
-                            .map((img, index) => (
-                                <CarouselItem key={index}>
-                                    <div className="p-1">
-                                        <Image
-                                            width={500}
-                                            height={500}
-                                            src={String(img)}
-                                            alt={productDetail.name}
-                                            className="h-full w-full object-cover"
-                                        />
-                                    </div>
-                                </CarouselItem>
-                            ))}
+                        {productImages.map((img, index) => (
+                            <CarouselItem key={index}>
+                                <div className="p-1">
+                                    <Image
+                                        width={500}
+                                        height={500}
+                                        src={String(img)}
+                                        alt={productDetail.name}
+                                        className="h-full w-full object-cover"
+                                    />
+                                </div>
+                            </CarouselItem>
+                        ))}
                     </CarouselContent>
                     <CarouselPrevious />
                     <CarouselNext />

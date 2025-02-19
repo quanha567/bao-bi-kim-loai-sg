@@ -1,16 +1,16 @@
-import { headers } from 'next/headers'
-
 import { ListCategory, ListProduct } from './components'
 import { Typography } from '@/components'
 
-import { categoryApi } from '@/apiClient'
+import { API_URL } from '@/constants'
+import { getApiUrl } from '@/lib'
+import { CategoryModel } from '@/models'
 
-const v = [0.5, 1, 5, 20]
-const sizes = ['Ø 190×225', 'Ø 155×170', 'Ø 110×100', 'Ø 100×75']
+const fetchCategories = (): Promise<CategoryModel[]> => {
+    return fetch(getApiUrl(API_URL.CATEGORIES)).then((res) => res.json())
+}
 
 const ProductPage = async () => {
-    headers()
-    const categories = await categoryApi.getAll()
+    const categories = await fetchCategories()
 
     return (
         <div className="container grid grid-cols-[300px_1fr] divide-x-[1px] py-10">

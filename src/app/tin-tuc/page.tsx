@@ -1,13 +1,17 @@
-import { headers } from 'next/headers'
-
 import { ArticleItem, LatestArticle } from './components'
 import { Button, Typography } from '@/components'
 
-import { articleApi } from '@/apiClient'
+import { API_URL } from '@/constants'
+import { getApiUrl } from '@/lib'
+import { ArticleModel } from '@/models'
+import { ApiListResponse } from '@/types'
+
+const fetchArticles = (): Promise<ApiListResponse<ArticleModel>> => {
+    return fetch(getApiUrl(`${API_URL.ARTICLES}/search`)).then((res) => res.json())
+}
 
 const NewsPage = async () => {
-    headers()
-    const blogs = await articleApi.search({})
+    const blogs = await fetchArticles()
 
     return (
         <div className="container space-y-6 py-10">

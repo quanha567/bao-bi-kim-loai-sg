@@ -18,7 +18,10 @@ export const RelativeProduct = ({ slug, productId }: RelativeProductProps) => {
         queryFn: () => productApi.search({ category: slug }),
     })
 
-    if (!isLoadingRelativeProducts && !relativeProducts?.data?.length) {
+    if (
+        (!isLoadingRelativeProducts && !relativeProducts?.data?.length) ||
+        relativeProducts?.data?.length === 1
+    ) {
         return null
     }
 

@@ -1,6 +1,5 @@
 import { User } from 'lucide-react'
 
-import { headers } from 'next/headers'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
@@ -16,8 +15,6 @@ const fetchArticle = (slug: string) => {
 }
 
 const ArticleDetail = async ({ params }: Readonly<{ params: { slug: string } }>) => {
-    headers()
-
     const { slug } = params
     const article = await fetchArticle(slug)
 
