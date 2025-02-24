@@ -22,18 +22,9 @@ const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentProp
 )
 PaginationContent.displayName = 'PaginationContent'
 
-const PaginationItem = React.forwardRef<
-    HTMLLIElement,
-    {
-        disabled?: boolean
-    } & React.ComponentProps<'li'>
->(({ className, disabled, ...props }, ref) => (
-    <li
-        ref={ref}
-        className={cn('', className, disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer')}
-        {...props}
-    />
-))
+const PaginationItem = React.forwardRef<HTMLLIElement, React.ComponentProps<'li'>>(
+    ({ className, ...props }, ref) => <li ref={ref} className={cn('', className)} {...props} />,
+)
 PaginationItem.displayName = 'PaginationItem'
 
 type PaginationLinkProps = {
@@ -46,13 +37,10 @@ const PaginationLink = ({ className, isActive, size = 'icon', ...props }: Pagina
         aria-current={isActive ? 'page' : undefined}
         className={cn(
             buttonVariants({
-                size,
                 variant: isActive ? 'outline' : 'ghost',
+                size,
             }),
             className,
-            isActive
-                ? 'cursor-not-allowed bg-primary text-white hover:bg-primary hover:text-white'
-                : 'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
         )}
         {...props}
     />
@@ -61,15 +49,14 @@ PaginationLink.displayName = 'PaginationLink'
 
 const PaginationPrevious = ({
     className,
+    isDisabled,
     ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
+}: {
+    isDisabled?: boolean
+} & React.ComponentProps<typeof PaginationLink>) => (
     <PaginationLink
-        size="default"
-        aria-label="Go to previous page"
-        className={cn(
-            'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
-            className,
-        )}
+        size="icon"
+        className={cn(className, isDisabled ? 'cursor-not-allowed opacity-50' : '')}
         {...props}
     >
         <ChevronLeft className="h-4 w-4" />
@@ -77,14 +64,16 @@ const PaginationPrevious = ({
 )
 PaginationPrevious.displayName = 'PaginationPrevious'
 
-const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (
+const PaginationNext = ({
+    className,
+    isDisabled,
+    ...props
+}: {
+    isDisabled?: boolean
+} & React.ComponentProps<typeof PaginationLink>) => (
     <PaginationLink
-        size="default"
-        aria-label="Go to next page"
-        className={cn(
-            'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
-            className,
-        )}
+        size="icon"
+        className={cn(className, isDisabled ? 'cursor-not-allowed opacity-50' : '')}
         {...props}
     >
         <ChevronRight className="h-4 w-4" />
@@ -99,6 +88,7 @@ const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<'span'
         {...props}
     >
         <MoreHorizontal className="h-4 w-4" />
+        <span className="sr-only">More pages</span>
     </span>
 )
 PaginationEllipsis.displayName = 'PaginationEllipsis'

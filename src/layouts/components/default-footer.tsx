@@ -1,3 +1,5 @@
+'use client'
+import { useQuery } from '@tanstack/react-query'
 import { Mail, MapPin, PhoneCall } from 'lucide-react'
 
 import Image from 'next/image'
@@ -5,6 +7,8 @@ import Link from 'next/link'
 
 import { Typography } from '@/components'
 
+import { categoryApi } from '@/apiClient'
+import { QUERY_KEY } from '@/constants'
 import { formatVietnamesePhoneNumber, getLink } from '@/lib'
 import { SettingRequestModel } from '@/models'
 import FbIcon from '@/public/fb-icon.png'
@@ -14,15 +18,12 @@ import ZaLoIcon from '@/public/zalo-icon.png'
 
 type DefaultFooterProps = SettingRequestModel
 
-const productCategories = [
-    'Thùng lon tròn',
-    'Hộp bánh kẹo tròn',
-    'Lon sữa',
-    'Hộp trà',
-    'Nắp nút các loại',
-]
-
 export const DefaultFooter = ({ address, email, phoneNumber }: DefaultFooterProps) => {
+    const { data: categories } = useQuery({
+        queryKey: [QUERY_KEY.CATEGORIES],
+        queryFn: () => categoryApi.getAll(),
+    })
+
     const contactMenu = [
         address && {
             href: getLink('maps', address),
@@ -40,6 +41,8 @@ export const DefaultFooter = ({ address, email, phoneNumber }: DefaultFooterProp
             text: email,
         },
     ].filter((item) => typeof item === 'object')
+
+    const productCategories = categories?.map((category) => category.name) || []
 
     const socials = [
         {
@@ -64,6 +67,9 @@ export const DefaultFooter = ({ address, email, phoneNumber }: DefaultFooterProp
                             width={120}
                             className="h-auto w-[120px] object-contain"
                         />
+                        <Typography variant="p" className="mt-4 font-bold">
+                            CÔNG TY TNHH SẢN XUẤT BAO BÌ KIM LOẠI SÀI GÒN
+                        </Typography>
                         <div className="mt-4 grid auto-cols-[40px] grid-flow-col gap-4">
                             {socials.map((social, index) => (
                                 <Link href="#" key={index}>

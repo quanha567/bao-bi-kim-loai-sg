@@ -58,14 +58,21 @@ export const ContactForm = () => {
     return (
         <FormProvider {...formMethods}>
             <div className="space-y-4 p-2 lg:p-10">
-                <FormInput name="name" label="Họ và tên" placeholder="Nhập họ và tên của bạn" />
                 <FormInput
+                    isRequired
+                    name="name"
+                    label="Họ và tên"
+                    placeholder="Nhập họ và tên của bạn"
+                />
+                <FormInput
+                    isRequired
                     name="phone"
                     label="Số điện thoại"
                     placeholder="Nhập số điện thoại của bạn"
                 />
                 <FormInput name="email" label="Email" placeholder="Nhập email của bạn" />
                 <FormTextarea
+                    isRequired
                     name="message"
                     label="Nội dung yêu cầu"
                     placeholder="Nhập nội dung yêu cầu của bạn"

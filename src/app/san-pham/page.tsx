@@ -16,44 +16,6 @@ const ProductPage = async () => {
         <div className="container grid grid-cols-[300px_1fr] divide-x-[1px] py-10">
             <div className="space-y-4 pr-4">
                 <ListCategory categories={categories} />
-                {/* <div>
-                    <div className="mb-2 w-fit border-b border-[#808080] pb-1">
-                        <Typography as="h3" variant="bold-lg">
-                            Dung tích
-                        </Typography>
-                    </div>
-                    <div>
-                        {v.map((item, index) => (
-                            <div key={index} className="flex items-center space-x-2 py-1">
-                                <Checkbox id={String(item)} />
-                                <label htmlFor={String(item)}>
-                                    <Typography as="span" variant="link">
-                                        {item} Lít
-                                    </Typography>
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-                </div>{' '}
-                <div>
-                    <div className="mb-2 w-fit border-b border-[#808080] pb-1">
-                        <Typography as="h3" variant="bold-lg">
-                            Kích thước
-                        </Typography>
-                    </div>
-                    <div>
-                        {sizes.map((size, index) => (
-                            <div key={index} className="flex items-center space-x-2 py-1">
-                                <Checkbox id={size} />
-                                <label htmlFor={size}>
-                                    <Typography as="span" variant="link">
-                                        {size}
-                                    </Typography>
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-                </div> */}
             </div>
             <div className="pl-4">
                 <Typography as="h1" variant="h1" className="text-center">

@@ -1,4 +1,6 @@
-import { AlignJustify, Search } from 'lucide-react'
+'use client'
+import { useQuery } from '@tanstack/react-query'
+import { AlignJustify } from 'lucide-react'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -20,60 +22,58 @@ import {
     NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 
-import { MenuSettingModel, SettingRequestModel } from '@/models'
+import { articleApi, categoryApi } from '@/apiClient'
+import { QUERY_KEY } from '@/constants'
+import { SettingRequestModel } from '@/models'
 import Logo from '@/public/logo.jpg'
-
-const menuItems = [
-    {
-        href: '/',
-        title: 'Trang chủ',
-    },
-    {
-        href: '/gioi-thieu',
-        title: 'Giới thiệu',
-    },
-    {
-        children: [
-            {
-                href: '/bao-bi-kim-loai',
-                title: 'Bao bì kim loại',
-            },
-            {
-                href: '/bao-bi-nhua',
-                title: 'Bao bì nhựa',
-            },
-            {
-                href: '/bao-bi-giay',
-                title: 'Bao bì giấy',
-            },
-        ],
-        href: '/san-pham',
-        title: 'Sản phẩm',
-    },
-    {
-        children: [
-            {
-                href: '/tin-tuc',
-                title: 'Tin tức',
-            },
-            {
-                href: '/su-kien',
-                title: 'Sự kiện',
-            },
-        ],
-        href: '/tin-tuc-su-kien',
-        title: 'Tin tức & Sự kiện',
-    },
-    {
-        href: '/lien-he',
-        title: 'Liên hệ',
-    },
-]
 
 type HeaderBottomProps = SettingRequestModel
 
 export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
-    const convertedMenu = (menus ? JSON.parse(menus) : []) as MenuSettingModel[]
+    const { data: categories } = useQuery({
+        queryKey: [QUERY_KEY.CATEGORIES],
+        queryFn: () => categoryApi.getAll(),
+    })
+
+    const { data: articles } = useQuery({
+        queryKey: [QUERY_KEY.ARTICLES],
+        queryFn: () =>
+            articleApi.search({
+                pageIndex: 0,
+                pageSize: 10,
+            }),
+    })
+
+    const menuItems = [
+        {
+            href: '/',
+            title: 'Trang chủ',
+        },
+        {
+            href: '/gioi-thieu',
+            title: 'Giới thiệu',
+        },
+        {
+            children: categories?.map((category) => ({
+                href: `/san-pham?category=${category.slug}`,
+                title: category.name,
+            })),
+            href: '/san-pham',
+            title: 'Sản phẩm',
+        },
+        {
+            children: articles?.data.map((article) => ({
+                href: `/${article.slug}`,
+                title: article.title,
+            })),
+            href: '/tin-tuc',
+            title: 'Tin tức & Sự kiện',
+        },
+        {
+            href: '/lien-he',
+            title: 'Liên hệ',
+        },
+    ]
 
     return (
         <div className="container flex items-center justify-between py-3">
@@ -86,20 +86,20 @@ export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
                 />
             </Link>
             <div className="hidden flex-col items-end lg:flex xl:flex-row">
-                {Array.isArray(convertedMenu) && convertedMenu.length > 0 ? (
+                {Array.isArray(menuItems) && menuItems.length > 0 ? (
                     <NavigationMenu className="flex-1">
                         <NavigationMenuList>
-                            {convertedMenu.map((item, index) => {
+                            {menuItems.map((item, index) => {
                                 if (!item?.children?.length) {
                                     return (
                                         <NavigationMenuItem asChild key={index}>
                                             <Link
                                                 passHref
-                                                href={item.slug || '#'}
+                                                href={item.href || '#'}
                                                 className="select-none rounded-md px-3 py-1.5 transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                                             >
                                                 <Typography as="span" variant="bold-uppercase">
-                                                    {item.label}
+                                                    {item.title}
                                                 </Typography>
                                             </Link>
                                         </NavigationMenuItem>
@@ -109,9 +109,9 @@ export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
                                 return (
                                     <NavigationMenuItem key={index}>
                                         <NavigationMenuTrigger>
-                                            <Link passHref href={item.slug || '#'}>
+                                            <Link passHref href={item.href || '#'}>
                                                 <Typography as="span" variant="bold-uppercase">
-                                                    {item.label}
+                                                    {item.title}
                                                 </Typography>
                                             </Link>
                                         </NavigationMenuTrigger>
@@ -134,9 +134,9 @@ export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
                 ) : (
                     <></>
                 )}
-                <Button size="icon" variant="ghost">
+                {/* <Button size="icon" variant="ghost">
                     <Search />
-                </Button>
+                </Button> */}
             </div>
             <Sheet>
                 <SheetTrigger asChild className="lg:hidden">
