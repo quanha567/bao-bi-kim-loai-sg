@@ -9,13 +9,13 @@ export const DefaultLayout = async ({ children }: React.PropsWithChildren) => {
     const setting = await getData()
 
     return (
-        <div className="layout">
+        <>
             <DefaultHeader {...setting} />
             <AppProvider setting={setting}>
                 <main>{children}</main>
             </AppProvider>
             <DefaultFooter {...setting} />
-        </div>
+        </>
     )
 }
 

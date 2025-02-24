@@ -1,3 +1,4 @@
+export * from './custom-pagination'
 export * from './custom-table'
 export * from './forms'
 export * from './modal-confirm'

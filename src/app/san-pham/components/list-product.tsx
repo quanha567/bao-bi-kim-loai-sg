@@ -1,9 +1,11 @@
 'use client'
 import { useQuery } from '@tanstack/react-query'
+import { Database } from 'lucide-react'
 
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import {
+    CustomPagination,
     ProductItem,
     ProductSkeleton,
     Select,
@@ -17,7 +19,6 @@ import {
 import { productApi } from '@/apiClient'
 import { QUERY_KEY } from '@/constants'
 import { CategoryModel } from '@/models'
-import { Database } from 'lucide-react'
 
 type ListProductProps = {
     categories: CategoryModel[]
@@ -26,7 +27,10 @@ type ListProductProps = {
 export const ListProduct = ({ categories }: ListProductProps) => {
     const searchParams = useSearchParams()
 
+    const router = useRouter()
+
     const category = searchParams.get('category')
+    const currentCategory = categories.find((item) => item.slug === category)
 
     const { data: products, isLoading: isLoadingProducts } = useQuery({
         queryKey: [QUERY_KEY.PRODUCTS, category],
@@ -36,7 +40,13 @@ export const ListProduct = ({ categories }: ListProductProps) => {
             }),
     })
 
-    const currentCategory = categories.find((item) => item.slug === category)
+    const handleChangePage = (page: number) => {
+        const params = new URLSearchParams(searchParams.toString())
+
+        params.set('page', String(page))
+
+        router.push(`?${params.toString()}`)
+    }
 
     return (
         <>
@@ -75,6 +85,12 @@ export const ListProduct = ({ categories }: ListProductProps) => {
                         </div>
                     )}
                 </div>
+                <CustomPagination
+                    onPageChange={handleChangePage}
+                    pageSize={products?.pageSize || 10}
+                    total={products?.totalElements || 0}
+                    currentPage={products?.pageIndex || 1}
+                />
             </div>
         </>
     )
