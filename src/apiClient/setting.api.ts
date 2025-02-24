@@ -1,7 +1,8 @@
 import { API_URL } from '@/constants'
 import { SettingRequestModel } from '@/models'
 
-import { apiClient } from '.'
+const apiClient = (await import('./index')).apiClient
+
 import { BaseApi } from './base.api'
 
 export class SettingApi extends BaseApi<SettingRequestModel> {

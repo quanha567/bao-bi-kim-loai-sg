@@ -1,7 +1,7 @@
 import { API_URL } from '@/constants'
 import { ArticleModel } from '@/models'
 
-import { apiClient } from '.'
+const apiClient = (await import('./index')).apiClient
 import { BaseApi } from './base.api'
 
 export class ArticleApi extends BaseApi<ArticleModel> {
