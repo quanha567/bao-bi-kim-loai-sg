@@ -1,7 +1,7 @@
 import { API_URL } from '@/constants'
 import { ArticleModel } from '@/models'
 
-import { apiClient } from '.'
+import { apiClient } from './axios'
 import { BaseApi } from './base.api'
 
 export class ArticleApi extends BaseApi<ArticleModel> {
