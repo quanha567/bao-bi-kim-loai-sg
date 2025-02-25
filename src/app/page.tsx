@@ -1,3 +1,5 @@
+import { Metadata } from 'next'
+
 import {
     CompanyOverview,
     DidYouKnow,
@@ -10,6 +12,11 @@ import {
 import { API_URL } from '@/constants'
 import { getApiUrl } from '@/lib'
 import { HomeConfigModel, HomeConfigRequestModel } from '@/models'
+
+export const metadata: Metadata = {
+    title: 'Trang chủ',
+    description: 'Trang chủ website Bao Bì Kim Loại Sài Gòn',
+}
 
 export default async function HomePage() {
     const homeConfig = await getHomeConfigData()

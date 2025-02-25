@@ -1,5 +1,12 @@
+import { Metadata } from 'next'
+
 import { ContactForm, ContactInfo } from './components'
 import { Typography } from '@/components'
+
+export const metadata: Metadata = {
+    title: 'Liên hệ chúng tôi',
+    description: 'Liên hệ chúng tôi để được hỗ trợ tốt nhất',
+}
 
 const ContactPage = () => {
     return (

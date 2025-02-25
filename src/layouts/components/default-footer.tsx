@@ -138,7 +138,7 @@ export const DefaultFooter = ({ address, email, phoneNumber }: DefaultFooterProp
 const FooterCopyRight = () => {
     return (
         <div className="container border-t py-3">
-            <Typography variant="caption" className="text-center">
+            <Typography variant="caption" className="text-center font-medium">
                 Copyright © {new Date().getFullYear()} | CÔNG TY TNHH SẢN XUẤT BAO BÌ KIM LOẠI SÀI
                 GÒN
             </Typography>

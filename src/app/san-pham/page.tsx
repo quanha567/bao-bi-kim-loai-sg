@@ -1,9 +1,16 @@
+import { Metadata } from 'next'
+
 import { ListCategory, ListProduct } from './components'
 import { Typography } from '@/components'
 
 import { API_URL } from '@/constants'
 import { getApiUrl } from '@/lib'
 import { CategoryModel } from '@/models'
+
+export const metadata: Metadata = {
+    title: 'Sản phẩm',
+    description: 'Các sản phẩm nổi bật của công ty chúng tôi',
+}
 
 const fetchCategories = (): Promise<CategoryModel[]> => {
     return fetch(getApiUrl(API_URL.CATEGORIES)).then((res) => res.json())

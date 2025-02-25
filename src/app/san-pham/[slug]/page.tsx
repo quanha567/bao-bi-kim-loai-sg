@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
@@ -15,9 +16,43 @@ import {
 
 import { API_URL } from '@/constants'
 import { getApiUrl } from '@/lib'
+import { ProductModel } from '@/models'
+import { ApiListResponse } from '@/types'
 
-const fetchProduct = (slug: string) => {
+const fetchProduct = (slug: string): Promise<ApiListResponse<ProductModel>> => {
     return fetch(getApiUrl(`${API_URL.PRODUCTS}/search?slug=${slug}`)).then((res) => res.json())
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: { slug: string }
+}): Promise<Metadata> {
+    const { slug } = await params
+    const product = await fetchProduct(slug)
+    const productDetail = product?.data?.[0]
+
+    if (!productDetail) {
+        return notFound()
+    }
+
+    return {
+        title: productDetail?.name,
+        description: productDetail?.description,
+        openGraph: {
+            images: [
+                {
+                    url: String(productDetail?.image),
+                    width: 500,
+                    height: 500,
+                    alt: productDetail?.name,
+                },
+            ],
+        },
+        robots: 'index,follow',
+        category: productDetail?.category?.name,
+        keywords: productDetail?.category?.name,
+    }
 }
 
 const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
