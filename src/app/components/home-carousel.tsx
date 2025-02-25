@@ -37,8 +37,8 @@ export const HomeCarousel = ({ sliders }: HomeCarouselProps) => {
                             <Image
                                 width={1920}
                                 alt="banner"
-                                height={1080}
                                 src={String(src)}
+                                height={(1920 * 9) / 21}
                                 className="h-full w-full object-cover"
                             />
                         </div>

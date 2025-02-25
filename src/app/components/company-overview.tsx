@@ -26,7 +26,7 @@ export const CompanyOverview = ({ extras }: CompanyOverviewProps) => {
                                 <div className="absolute inset-0 bg-white/30"></div>
                                 <Typography
                                     variant="bold-lg"
-                                    className="top absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl"
+                                    className="absolute left-1/2 top-1/2 w-2/3 -translate-x-1/2 -translate-y-1/2 text-pretty text-center text-4xl"
                                 >
                                     {extra.title}
                                 </Typography>
