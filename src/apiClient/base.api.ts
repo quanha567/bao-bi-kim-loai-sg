@@ -1,5 +1,6 @@
-import { ApiClient } from '@/lib'
 import { ApiListResponse } from '@/types/api.type'
+
+import ApiClient from './axios'
 
 export class BaseApi<T> {
     protected client: ApiClient

@@ -1,8 +1,7 @@
 import { API_URL } from '@/constants'
 import { CategoryModel } from '@/models'
 
-const apiClient = (await import('./index')).apiClient
-
+import { apiClient } from './axios'
 import { BaseApi } from './base.api'
 
 class CategoryApi extends BaseApi<CategoryModel> {

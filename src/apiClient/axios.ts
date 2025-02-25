@@ -1,6 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import qs from 'qs'
-export class ApiClient {
+
+import { API_URL } from '@/constants'
+
+export default class ApiClient {
     private axios: AxiosInstance
 
     constructor(baseURL: string, defaultHeaders: Record<string, string> = {}) {
@@ -84,3 +87,5 @@ export class ApiClient {
         return this.axios.request<T>(config)
     }
 }
+
+export const apiClient = new ApiClient(API_URL.BASE_URL)

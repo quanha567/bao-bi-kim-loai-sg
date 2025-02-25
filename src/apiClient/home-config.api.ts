@@ -6,8 +6,7 @@ import {
     SettingRequestModel,
 } from '@/models'
 
-const apiClient = (await import('./index')).apiClient
-
+import { apiClient } from './axios'
 import { BaseApi } from './base.api'
 
 export class HomeConfigApi extends BaseApi<HomeConfigRequestModel> {

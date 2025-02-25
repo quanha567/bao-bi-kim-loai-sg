@@ -1,4 +1,4 @@
-export * from './axios'
+export * from '../apiClient/axios'
 export * from './date'
 export * from './number'
 export * from './url'
