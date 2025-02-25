@@ -40,7 +40,7 @@ export const SuccessStory = ({ successStories }: SuccessStoryProps) => {
                         <div className="absolute inset-0 bg-black/20"></div>
                         <Typography
                             variant="h3"
-                            className="absolute left-1/2 top-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 text-pretty break-all text-center !text-4xl text-white"
+                            className="absolute left-1/2 top-1/2 w-2/3 -translate-x-1/2 -translate-y-1/2 text-pretty text-center !text-4xl text-white"
                         >
                             {story.title}
                         </Typography>
