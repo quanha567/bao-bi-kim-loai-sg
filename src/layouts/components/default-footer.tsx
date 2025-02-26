@@ -87,7 +87,7 @@ export const DefaultFooter = ({ address, email, phoneNumber }: DefaultFooterProp
                         <ul className="mt-4 space-y-2">
                             {productCategories.map((category) => (
                                 <li key={category}>
-                                    <Link passHref href={`/products?category=${category}`}>
+                                    <Link passHref href={`/san-pham?category=${category}`}>
                                         <Typography
                                             as="span"
                                             variant="regular-sm"
@@ -124,10 +124,13 @@ export const DefaultFooter = ({ address, email, phoneNumber }: DefaultFooterProp
                             ))}
                         </ul>
                     </div>
-                    <iframe
-                        className="aspect-video w-full rounded-lg"
-                        src={`https://maps.google.com/maps?q=${10.754487},${106.705593}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
-                    />
+                    <div className="aspect-video w-full overflow-hidden rounded-lg">
+                        <iframe
+                            title="map"
+                            className="h-full w-full"
+                            src={`https://maps.google.com/maps?q=${10.754487},${106.705593}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                        />
+                    </div>
                 </div>
             </div>
             <FooterCopyRight />

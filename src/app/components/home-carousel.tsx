@@ -35,6 +35,7 @@ export const HomeCarousel = ({ sliders }: HomeCarouselProps) => {
                     <CarouselItem key={index}>
                         <div className="aspect-video lg:aspect-[21/9]">
                             <Image
+                                priority
                                 width={1920}
                                 alt="banner"
                                 src={String(src)}

@@ -57,7 +57,7 @@ const ArticleDetail = async ({ params }: Readonly<{ params: { slug: string } }>)
     }
 
     return (
-        <div className="container gap-4 py-10 lg:grid lg:grid-cols-[3fr_1fr] lg:divide-x-[1px]">
+        <div className="container gap-4 py-6 lg:grid lg:grid-cols-[3fr_1fr] lg:divide-x-[1px] lg:py-10">
             <div className="space-y-4 lg:pr-4">
                 <Typography as="h1" variant="h1">
                     {article.title}

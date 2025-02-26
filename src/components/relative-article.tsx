@@ -17,7 +17,7 @@ export const RelativeArticle = () => {
 
     return (
         <>
-            <Typography as="h5" variant="h5" className="uppercase">
+            <Typography as="h4" variant="h4" className="uppercase">
                 Bài viết liên quan
             </Typography>
             <div className="mt-4 grid divide-y-[1px]">

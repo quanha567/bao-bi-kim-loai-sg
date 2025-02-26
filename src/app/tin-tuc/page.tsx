@@ -21,12 +21,12 @@ const NewsPage = async () => {
     const blogs = await fetchArticles()
 
     return (
-        <div className="container space-y-6 py-10">
+        <div className="container space-y-3 py-8 lg:space-y-6 lg:py-10">
             <Typography as="h1" variant="h1" className="text-center">
                 Tin tức và sự kiên
             </Typography>
             <LatestArticle article={blogs?.data?.[0]} />
-            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
                 {blogs?.data?.map((article) => <ArticleItem key={article?.id} {...article} />)}
             </div>
             <div className="flex justify-center">

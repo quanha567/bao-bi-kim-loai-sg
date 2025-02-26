@@ -20,11 +20,11 @@ const ProductPage = async () => {
     const categories = await fetchCategories()
 
     return (
-        <div className="container grid grid-cols-[300px_1fr] divide-x-[1px] py-10">
-            <div className="space-y-4 pr-4">
+        <div className="container grid lg:grid-cols-[300px_1fr] lg:divide-x-[1px] lg:py-10">
+            <div className="hidden space-y-4 pr-4 lg:block">
                 <ListCategory categories={categories} />
             </div>
-            <div className="pl-4">
+            <div className="py-8 lg:py-0 lg:pl-4">
                 <Typography as="h1" variant="h1" className="text-center">
                     Sản phẩm
                 </Typography>

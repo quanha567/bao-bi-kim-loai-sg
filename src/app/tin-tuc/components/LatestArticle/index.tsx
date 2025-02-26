@@ -26,7 +26,7 @@ export const LatestArticle = ({ article }: LatestArticleProps) => {
                 className="h-full w-full object-cover"
             />
             <span className="absolute inset-0 bg-black/20"></span>
-            <span className="absolute bottom-6 left-8 space-y-2 text-background">
+            <span className="absolute bottom-2 left-2 space-y-2 text-background lg:bottom-6 lg:left-8">
                 <Typography as="h2" variant="h2" className="line-clamp-2 max-w-xl text-pretty">
                     {article?.title}
                 </Typography>

@@ -27,7 +27,7 @@ export const RelativeProduct = ({ slug, productId }: RelativeProductProps) => {
 
     return (
         <div>
-            <Typography as="h5" variant="h5">
+            <Typography as="h4" variant="h4">
                 Sản phẩm liên quan
             </Typography>
             <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4 xl:grid-cols-5">

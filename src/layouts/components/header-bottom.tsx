@@ -92,17 +92,18 @@ export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
                             {menuItems.map((item, index) => {
                                 if (!item?.children?.length) {
                                     return (
-                                        <NavigationMenuItem asChild key={index}>
-                                            <Link
-                                                passHref
-                                                href={item.href || '#'}
-                                                className="select-none rounded-md px-3 py-1.5 transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                                            >
-                                                <Typography as="span" variant="bold-uppercase">
-                                                    {item.title}
-                                                </Typography>
-                                            </Link>
-                                        </NavigationMenuItem>
+                                        // <NavigationMenuItem asChild key={index}>
+                                        //     <Link
+                                        //         passHref
+                                        //         href={item.href || '#'}
+                                        //         className="select-none rounded-md px-3 py-1.5 transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                        //     >
+                                        //         <Typography as="span" variant="bold-uppercase">
+                                        //             {item.title}
+                                        //         </Typography>
+                                        //     </Link>
+                                        // </NavigationMenuItem>
+                                        <ListItem key={index} href={item.href} title={item.title} />
                                     )
                                 }
 

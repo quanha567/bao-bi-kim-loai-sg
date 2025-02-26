@@ -69,8 +69,8 @@ const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
     return (
         <div className="container space-y-3 pb-10 pt-4">
             <ProductBreadcrumb />
-            <div className="grid grid-cols-[1fr_2fr] gap-4">
-                <Carousel className="w-full max-w-xs">
+            <div className="grid gap-4 lg:grid-cols-[1fr_2fr]">
+                <Carousel className="w-full lg:max-w-xs">
                     <CarouselContent>
                         {productImages.map((img, index) => (
                             <CarouselItem key={index}>
@@ -93,27 +93,11 @@ const ProductDetailPage = async ({ params }: { params: { slug: string } }) => {
                     <Typography as="h1" variant="h1" className="!text-2xl">
                         {productDetail.name}
                     </Typography>
-                    <Typography as="h5" variant="h5" className="text-primary">
+                    <Typography as="h4" variant="h4" className="text-primary">
                         Liên hệ
                     </Typography>
-
-                    {/* <div className="space-y-2">
-                        <Typography as="h5" variant="h5">
-                            Thông số sản phẩm
-                        </Typography>
-                        <div className="flex items-center gap-4">
-                            <Plus size={20} />
-                            <Typography>Kích thước:</Typography>
-                            <Typography>190×225</Typography>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <Plus size={20} />
-                            <Typography>Kích thước:</Typography>
-                            <Typography>190×225</Typography>
-                        </div>
-                    </div> */}
                     <div className="space-y-2">
-                        <Typography as="h5" variant="h5">
+                        <Typography as="h4" variant="h4">
                             Mô tả sản phẩm
                         </Typography>
                         <Typography>{productDetail?.description}</Typography>
