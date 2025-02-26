@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { SettingRequestModel } from '@/models'
-import { settingService } from '@/services'
+import { articleService, categoryService, settingService } from '@/services'
 
 export async function DELETE() {
     try {
@@ -15,8 +15,15 @@ export async function DELETE() {
 
 export async function GET() {
     try {
-        const setting = await settingService.getSetting()
-        return NextResponse.json(setting, { status: 200 })
+        const [setting, categories, articles] = await Promise.all([
+            settingService.getSetting(),
+            categoryService.getAll(),
+            articleService.getArticles(0, 10, '', 'createdAt'),
+        ])
+        return NextResponse.json(
+            { setting, categories, articles: articles.articles },
+            { status: 200 },
+        )
     } catch (error) {
         console.log('🚀 -> GET -> error:', error)
         return NextResponse.json({ error: 'An error occurred' }, { status: 500 })

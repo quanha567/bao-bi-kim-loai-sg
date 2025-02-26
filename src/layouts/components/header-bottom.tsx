@@ -1,5 +1,4 @@
 'use client'
-import { useQuery } from '@tanstack/react-query'
 import { AlignJustify } from 'lucide-react'
 
 import Image from 'next/image'
@@ -22,28 +21,12 @@ import {
     NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 
-import { articleApi, categoryApi } from '@/apiClient'
-import { QUERY_KEY } from '@/constants'
-import { SettingRequestModel } from '@/models'
+import { SettingResponseModel } from '@/models'
 import Logo from '@/public/logo.jpg'
 
-type HeaderBottomProps = SettingRequestModel
+type HeaderBottomProps = SettingResponseModel
 
-export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
-    const { data: categories } = useQuery({
-        queryKey: [QUERY_KEY.CATEGORIES],
-        queryFn: () => categoryApi.getAll(),
-    })
-
-    const { data: articles } = useQuery({
-        queryKey: [QUERY_KEY.ARTICLES],
-        queryFn: () =>
-            articleApi.search({
-                pageIndex: 0,
-                pageSize: 10,
-            }),
-    })
-
+export const HeaderBottom = ({ categories = [], articles = [] }: HeaderBottomProps) => {
     const menuItems = [
         {
             href: '/',
@@ -62,7 +45,7 @@ export const HeaderBottom = ({ menus }: HeaderBottomProps) => {
             title: 'Sản phẩm',
         },
         {
-            children: articles?.data.map((article) => ({
+            children: articles?.map((article) => ({
                 href: `/${article.slug}`,
                 title: article.title,
             })),

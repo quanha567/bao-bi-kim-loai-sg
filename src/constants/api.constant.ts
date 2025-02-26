@@ -7,4 +7,5 @@ export const API_URL = {
     PAGES: '/pages',
     HOME_CONFIG: '/home-config',
     CONTACTS: '/contacts',
+    LAYOUT: '/layout',
 }

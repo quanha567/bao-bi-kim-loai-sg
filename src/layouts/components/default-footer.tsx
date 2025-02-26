@@ -1,5 +1,4 @@
 'use client'
-import { useQuery } from '@tanstack/react-query'
 import { Mail, MapPin, PhoneCall } from 'lucide-react'
 
 import Image from 'next/image'
@@ -7,23 +6,19 @@ import Link from 'next/link'
 
 import { Typography } from '@/components'
 
-import { categoryApi } from '@/apiClient'
-import { QUERY_KEY } from '@/constants'
 import { formatVietnamesePhoneNumber, getLink } from '@/lib'
-import { SettingRequestModel } from '@/models'
+import { SettingResponseModel } from '@/models'
 import FbIcon from '@/public/fb-icon.png'
 import Logo from '@/public/logo.jpg'
 import YtbIcon from '@/public/ytb-icon.png'
 import ZaLoIcon from '@/public/zalo-icon.png'
 
-type DefaultFooterProps = SettingRequestModel
+type DefaultFooterProps = SettingResponseModel
 
-export const DefaultFooter = ({ address, email, phoneNumber }: DefaultFooterProps) => {
-    const { data: categories } = useQuery({
-        queryKey: [QUERY_KEY.CATEGORIES],
-        queryFn: () => categoryApi.getAll(),
-    })
-
+export const DefaultFooter = ({
+    setting: { address, email, phoneNumber },
+    categories = [],
+}: DefaultFooterProps) => {
     const contactMenu = [
         address && {
             href: getLink('maps', address),

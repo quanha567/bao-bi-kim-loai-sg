@@ -11,9 +11,7 @@ import { DefaultHeaderProps } from './default-header'
 type HeaderContactProps = DefaultHeaderProps
 
 export const HeaderContact = ({
-    address = '',
-    email = '',
-    phoneNumber = '',
+    setting: { address = '', email = '', phoneNumber = '' },
 }: HeaderContactProps) => {
     return (
         <div className="hidden bg-primary py-2 lg:block">

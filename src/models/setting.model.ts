@@ -1,4 +1,6 @@
+import { ArticleModel } from './article.model'
 import { BaseModel } from './base.model'
+import { CategoryModel } from './category.model'
 
 export interface MenuSettingModel extends BaseModel {
     isChild: any
@@ -18,4 +20,10 @@ export interface SettingModel extends BaseModel {
 
 export interface SettingRequestModel extends Omit<SettingModel, 'menus'> {
     menus?: string
+}
+
+export interface SettingResponseModel {
+    articles: ArticleModel[]
+    categories: CategoryModel[]
+    setting: SettingRequestModel
 }
