@@ -11,7 +11,11 @@ import {
     FormUpload,
 } from '@/components'
 
-export const SuccessStory = () => {
+interface SuccessStoryProps {
+    isLoading?: boolean
+}
+
+export const SuccessStory = ({ isLoading }: SuccessStoryProps) => {
     const { control } = useFormContext()
     const {
         fields: successStories,
@@ -34,7 +38,7 @@ export const SuccessStory = () => {
     }
 
     return (
-        <Card>
+        <Card isLoading={isLoading}>
             <CardHeader>
                 <CardTitle>Câu chuyện thành công</CardTitle>
             </CardHeader>

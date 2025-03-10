@@ -50,7 +50,7 @@ export const useUpdateProduct = () => {
 }
 
 export const useDeleteProduct = () => {
-    return useMutation<void, Error, string>({
+    return useMutation<void, Error, string | string[]>({
         mutationFn: async (ids: string | string[]) => {
             await productApi.delete(ids)
         },

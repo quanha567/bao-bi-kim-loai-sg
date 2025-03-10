@@ -8,7 +8,7 @@ import { getApiUrl } from '@/lib'
 import { CategoryModel } from '@/models'
 
 export const metadata: Metadata = {
-    title: 'Sản phẩm',
+    title: 'Sản phẩm | Bao bì kim loại Sài Gòn',
     description: 'Các sản phẩm nổi bật của công ty chúng tôi',
 }
 

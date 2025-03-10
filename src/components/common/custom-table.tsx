@@ -7,14 +7,14 @@ import {
     ChevronUp,
     Database,
     Ellipsis,
-    List,
     Loader,
     PencilLine,
     RotateCw,
-    TableIcon,
     Trash2,
 } from 'lucide-react'
 import React, { ReactNode, useEffect, useState } from 'react'
+
+import { useLocalStorage } from 'usehooks-ts'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -96,12 +96,12 @@ export const CustomTable = <T,>({
 }: CustomTableProps<T>) => {
     const { ascending, handleSortChange, sortColumn } = useSearch({
         initialSortColumn: null,
-        pageSize,
-        totalElements,
     })
     const [isRefresh, setIsRefresh] = useState<boolean>(false)
     const [selectedCheckboxes, setSelectedCheckboxes] = useState<Set<T[keyof T]>>(new Set())
     const [isAllSelected, setIsAllSelected] = useState<boolean>(false)
+
+    const [isListView] = useLocalStorage('isListView', false)
 
     const handleSelectAll = () => {
         if (isAllSelected) {
@@ -125,14 +125,6 @@ export const CustomTable = <T,>({
     useEffect(() => {
         setIsAllSelected(data.every((item) => selectedCheckboxes.has(item[rowKey])))
     }, [pageIndex, data, selectedCheckboxes])
-    const [isListView, setIsListView] = useState<boolean>(() => {
-        const savedView = localStorage?.getItem('listViewMode')
-        return savedView ? JSON.parse(savedView) : false
-    })
-
-    useEffect(() => {
-        localStorage.setItem('listViewMode', JSON.stringify(isListView))
-    }, [isListView])
 
     const handleSort = (columnKey: string) => {
         const newAscending = sortColumn === columnKey ? !ascending : true
@@ -184,13 +176,13 @@ export const CustomTable = <T,>({
                         </Button>
                     )}
                     {extraButtons && <div className="space-x-2">{extraButtons}</div>}
-                    <Button
+                    {/* <Button
                         variant="outline"
                         className="flex items-center gap-2"
                         onClick={() => setIsListView(!isListView)}
                     >
                         {isListView ? <TableIcon size={20} /> : <List size={20} />}
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
             {!isListView ? (
@@ -364,10 +356,9 @@ export const CustomTable = <T,>({
                         <Pagination className="flex space-x-2">
                             <PaginationContent>
                                 <PaginationItem
-                                    disabled={pageIndex === 0}
                                     onClick={() => handlePageChangeWithPagination(pageIndex - 1)}
                                 >
-                                    <PaginationPrevious />
+                                    <PaginationPrevious isDisabled={pageIndex === 0} />
                                 </PaginationItem>
                                 {startPage > 0 && (
                                     <>
@@ -427,10 +418,9 @@ export const CustomTable = <T,>({
                                     </>
                                 )}
                                 <PaginationItem
-                                    disabled={pageIndex === totalPages - 1}
                                     onClick={() => handlePageChangeWithPagination(pageIndex + 1)}
                                 >
-                                    <PaginationNext />
+                                    <PaginationNext isDisabled={pageIndex === totalPages - 1} />
                                 </PaginationItem>
                             </PaginationContent>
                         </Pagination>

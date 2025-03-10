@@ -1,3 +1,5 @@
+import { Metadata } from 'next'
+
 const html = `<h1>Giới thiệu về Công Ty TNHH Sản Xuất Bao Bì Kim Loại Sài Gòn</h1>
 
     <div class="section">
@@ -53,6 +55,11 @@ const html = `<h1>Giới thiệu về Công Ty TNHH Sản Xuất Bao Bì Kim Lo�
         <h2>Tầm nhìn và sứ mệnh</h2>
         <p>Chúng tôi cam kết mang đến những sản phẩm bao bì kim loại chất lượng cao, đáp ứng nhu cầu khắt khe nhất của khách hàng, góp phần vào sự phát triển bền vững của ngành công nghiệp và cộng đồng.</p>
     </div>`
+
+export const metadata: Metadata = {
+    title: 'Giới thiệu | Bao Bì Kim Loại Sài Gò',
+    description: 'Giới thiệu về Công Ty TNHH Sản Xuất Bao Bì Kim Loại Sài Gòn',
+}
 
 const IntroducePage = () => {
     return <div className="container py-10" dangerouslySetInnerHTML={{ __html: html }}></div>

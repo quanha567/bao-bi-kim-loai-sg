@@ -9,7 +9,7 @@ import { ArticleModel } from '@/models'
 import { ApiListResponse } from '@/types'
 
 export const metadata: Metadata = {
-    title: 'Tin tức và sự kiện',
+    title: 'Tin tức và sự kiện | Bao bì kim loại Sài Gòn',
     description: 'Cập nhật tin tức và sự kiện mới nhất từ cộng đồng',
 }
 

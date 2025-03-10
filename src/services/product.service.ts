@@ -1,3 +1,5 @@
+import slugify from 'slug'
+
 import { prisma } from '@/db'
 import { ProductModel } from '@/models'
 
@@ -84,5 +86,26 @@ export const productService = {
             where: { id },
         })
     },
-    generateSlug: (name: string) => name.toLowerCase().replace(/\s+/g, '-'),
+    generateSlug: async (name: string) => {
+        const baseSlug = slugify(name)
+
+        let slug = baseSlug
+        let counter = 1
+
+        // Check if the base slug already exists
+        const existingSlug = await prisma.product.findFirst({
+            where: { slug: baseSlug },
+            select: { slug: true },
+        })
+
+        if (existingSlug) {
+            // If the base slug exists, find a unique one by appending a counter
+            while (await prisma.product.findFirst({ where: { slug } })) {
+                slug = `${baseSlug}-${counter}`
+                counter++
+            }
+        }
+
+        return slug
+    },
 }

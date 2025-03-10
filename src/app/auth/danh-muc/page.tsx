@@ -4,6 +4,7 @@ import { SaveIcon } from 'lucide-react'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
+import Link from 'next/link'
 import { z } from 'zod'
 
 import {
@@ -21,9 +22,11 @@ import {
     FormInput,
     ModalConfirm,
     TableButtonWrapper,
+    Typography,
     UpdateButton,
 } from '@/components'
 
+import { DEFAULT_PATH } from '@/constants'
 import {
     useCreateCategory,
     useDeleteCategory,
@@ -61,7 +64,7 @@ const AdminCategoryPage = () => {
 
     const [isDialogOpen, { toggle: toggleDialog }] = useDisclosure(false, {
         onClose: () => {
-            form.reset()
+            form.reset(initialValues)
         },
     })
 
@@ -87,7 +90,13 @@ const AdminCategoryPage = () => {
         {
             key: 'name',
             label: 'Tên danh mục',
-            render: (data) => data.name,
+            render: (data) => (
+                <Link target="_blank" href={`${DEFAULT_PATH.PRODUCT}?danh-muc=${data.slug}`}>
+                    <Typography as="span" variant="link" className="text-primary">
+                        {data.name}
+                    </Typography>
+                </Link>
+            ),
         },
         {
             key: 'slug',
@@ -120,12 +129,11 @@ const AdminCategoryPage = () => {
                 updateCategory(data, {
                     onSuccess: async () => {
                         await fetchCategories()
-                        toggleDialog()
-                        form.reset()
                         toast({
                             title: 'Cập nhật danh mục thành công!',
                             variant: 'success',
                         })
+                        toggleDialog()
                     },
                     onError: (error) => {
                         toast({
@@ -140,12 +148,11 @@ const AdminCategoryPage = () => {
             createCategory(data, {
                 onSuccess: async () => {
                     await fetchCategories()
-                    toggleDialog()
-                    form.reset()
                     toast({
                         title: 'Thêm danh mục thành công!',
                         variant: 'success',
                     })
+                    toggleDialog()
                 },
                 onError: (error) => {
                     toast({
@@ -197,6 +204,7 @@ const AdminCategoryPage = () => {
             <CustomTable
                 rowKey="id"
                 columns={columns}
+                onRefresh={fetchCategories}
                 tableName="Danh sách danh mục"
                 isLoading={isLoadingCategories}
                 data={categoriesData?.data || []}
@@ -216,7 +224,7 @@ const AdminCategoryPage = () => {
                     <div>
                         <FormProvider {...form}>
                             <FormInput isRequired name="name" label="Tên danh mục" />
-                            <FormInput name="slug" label="Slug" />
+                            {/* <FormInput name="slug" label="Slug" /> */}
                         </FormProvider>
                     </div>
                     <DialogFooter>

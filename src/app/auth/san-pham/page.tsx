@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { z } from 'zod'
 
 import {
@@ -25,9 +26,11 @@ import {
     FormUpload,
     ModalConfirm,
     TableButtonWrapper,
+    Typography,
     UpdateButton,
 } from '@/components'
 
+import { DEFAULT_PATH } from '@/constants'
 import {
     useCreateProduct,
     useDeleteProduct,
@@ -148,7 +151,13 @@ const AdminProductPage = () => {
         {
             key: 'name',
             label: 'Tên sản phẩm',
-            render: (data) => data.name,
+            render: (data) => (
+                <Link target="_blank" href={`${DEFAULT_PATH.PRODUCT}/${data.slug}`}>
+                    <Typography as="span" variant="link" className="text-primary">
+                        {data.name}
+                    </Typography>
+                </Link>
+            ),
         },
         {
             key: 'category',
@@ -169,6 +178,11 @@ const AdminProductPage = () => {
 
     const openUpdateDialog = (data: ProductModel) => {
         form.reset({ ...data })
+        toggleDialog()
+    }
+
+    const openCreateDialog = () => {
+        form.reset(initialValues)
         toggleDialog()
     }
 
@@ -264,7 +278,7 @@ const AdminProductPage = () => {
                 totalPages={productsData?.totalPages || 0}
                 onPaginationChange={handlePaginationChange}
                 totalElements={productsData?.totalElements || 0}
-                extraButtons={<AddButton onClick={toggleDialog}>Thêm sản phẩm</AddButton>}
+                extraButtons={<AddButton onClick={openCreateDialog}>Thêm sản phẩm</AddButton>}
             />
             <Dialog open={isDialogOpen} onOpenChange={toggleDialog}>
                 <DialogContent>

@@ -1,5 +1,6 @@
-import { prisma } from '@/db'
+import slugify from 'slug'
 
+import { prisma } from '@/db'
 export const categoryService = {
     checkIsExistSlug: async (slug: string) => !!prisma.category.count({ where: { slug } }),
     createCategory: async (name: string, slug: string) =>
@@ -49,16 +50,28 @@ export const categoryService = {
     updateCategory: async (id: string, name: string, slug: string) => {
         return prisma.category.update({ data: { name, slug }, where: { id } })
     },
-    generateSlug: (name: string) =>
-        name
-            .toLowerCase() // Convert to lowercase
-            .normalize('NFD') // Normalize to decompose special characters
-            .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
-            .replace(/[^a-z0-9\s-]/g, '') // Remove invalid characters (keep spaces and hyphens)
-            .replace(/\s+/g, '-') // Replace spaces with hyphens
-            .replace(/-+/g, '-') // Collapse multiple hyphens into one
-            .trim() // Remove leading and trailing spaces or hyphens
-            .replace(/^-|-$/g, ''),
+    generateSlug: async (name: string) => {
+        const baseSlug = slugify(name)
+
+        let slug = baseSlug
+        let counter = 1
+
+        // Check if the base slug already exists
+        const existingSlug = await prisma.category.findFirst({
+            where: { slug: baseSlug },
+            select: { slug: true },
+        })
+
+        if (existingSlug) {
+            // If the base slug exists, find a unique one by appending a counter
+            while (await prisma.category.findFirst({ where: { slug } })) {
+                slug = `${baseSlug}-${counter}`
+                counter++
+            }
+        }
+
+        return slug
+    },
     getAll: async () =>
         prisma.category.findMany({
             select: {

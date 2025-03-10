@@ -3,7 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle, FormMultipleSelect } from '@/
 
 import { useGetProductOptions } from '@/hooks'
 
-export const ProductConfig = () => {
+interface ProductConfigProps {
+    isLoading?: boolean
+}
+
+export const ProductConfig = ({ isLoading }: ProductConfigProps) => {
     const {
         productOptions,
         isFetchingNextPageProductOptions,
@@ -12,7 +16,7 @@ export const ProductConfig = () => {
     } = useGetProductOptions()
 
     return (
-        <Card>
+        <Card isLoading={isLoading}>
             <CardHeader>
                 <CardTitle>Sản phẩm chính</CardTitle>
             </CardHeader>

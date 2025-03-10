@@ -11,7 +11,11 @@ import {
     FormUpload,
 } from '@/components'
 
-export const DoYouKnowConfig = () => {
+interface DoYouKnowConfigProps {
+    isLoading?: boolean
+}
+
+export const DoYouKnowConfig = ({ isLoading }: DoYouKnowConfigProps) => {
     const { control } = useFormContext()
     const {
         fields: doYouKnows,
@@ -34,7 +38,7 @@ export const DoYouKnowConfig = () => {
     }
 
     return (
-        <Card>
+        <Card isLoading={isLoading}>
             <CardHeader>
                 <CardTitle>Bạn có biết</CardTitle>
             </CardHeader>

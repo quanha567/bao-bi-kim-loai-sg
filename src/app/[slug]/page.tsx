@@ -75,13 +75,10 @@ const ArticleDetail = async ({ params }: Readonly<{ params: { slug: string } }>)
                     width={1920}
                     height={1080}
                     alt={article.title}
-                    src={article.thumbnail}
+                    src={String(article.thumbnail)}
                     className="rounded-lg object-cover"
                 />
-                <div
-                    className="prose prose-stone"
-                    dangerouslySetInnerHTML={{ __html: article.content }}
-                ></div>
+                <div dangerouslySetInnerHTML={{ __html: article.content }}></div>
             </div>
             <div className="mt-10 lg:mt-0 lg:pl-4">
                 <RelativeArticle />

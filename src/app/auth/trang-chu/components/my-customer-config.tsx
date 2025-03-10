@@ -2,9 +2,13 @@
 
 import { Card, CardContent, CardHeader, CardTitle, FormUploadMultiple } from '@/components'
 
-export const MyCustomerConfig = () => {
+interface MyCustomerConfigProps {
+    isLoading?: boolean
+}
+
+export const MyCustomerConfig = ({ isLoading }: MyCustomerConfigProps) => {
     return (
-        <Card>
+        <Card isLoading={isLoading}>
             <CardHeader>
                 <CardTitle>Logo Khách hàng</CardTitle>
             </CardHeader>

@@ -39,8 +39,10 @@ export const HomeCarousel = ({ sliders }: HomeCarouselProps) => {
                                 width={1920}
                                 alt="banner"
                                 src={String(src)}
+                                placeholder="blur"
                                 height={(1920 * 9) / 21}
                                 className="h-full w-full object-cover"
+                                blurDataURL="https://i.sstatic.net/QpNIR.png"
                             />
                         </div>
                     </CarouselItem>

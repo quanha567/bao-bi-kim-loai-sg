@@ -14,8 +14,10 @@ import { getApiUrl } from '@/lib'
 import { HomeConfigModel, HomeConfigRequestModel } from '@/models'
 
 export const metadata: Metadata = {
-    title: 'Trang chủ',
+    title: 'Trang chủ | Bao Bì Kim Loại Sài Gòn',
     description: 'Trang chủ website Bao Bì Kim Loại Sài Gòn',
+    keywords:
+        'bao bì kim loại, bao bì kim loại sài gòn, bao bì kim loại tphcm, bao bì kim loại hcm, bao bì',
 }
 
 export default async function HomePage() {
@@ -34,7 +36,9 @@ export default async function HomePage() {
 }
 
 const getHomeConfigData = async (): Promise<HomeConfigModel> => {
-    return fetch(getApiUrl(API_URL.HOME_CONFIG))
+    return fetch(getApiUrl(API_URL.HOME_CONFIG), {
+        cache: 'force-cache',
+    })
         .then((res) => res.json())
         .then((res: HomeConfigRequestModel) => ({
             ...res,

@@ -11,7 +11,7 @@ import {
     SliderConfig,
     SuccessStory,
 } from './components'
-import { Button } from '@/components'
+import { FormSubmit } from '@/components'
 
 import { useCreateOrUpdateHomeConfig, useGetHomeConfig, useToast } from '@/hooks'
 
@@ -51,18 +51,16 @@ const AdminHomePage = () => {
     return (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <FormProvider {...formMethods}>
-                <SliderConfig />
-                <ProductConfig />
-                <DoYouKnowConfig />
-                <SuccessStory />
-                <MyCustomerConfig />
-                <Extras />
-                <Button
+                <SliderConfig isLoading={isLoadingHomeConfig} />
+                <ProductConfig isLoading={isLoadingHomeConfig} />
+                <DoYouKnowConfig isLoading={isLoadingHomeConfig} />
+                <SuccessStory isLoading={isLoadingHomeConfig} />
+                <MyCustomerConfig isLoading={isLoadingHomeConfig} />
+                <Extras isLoading={isLoadingHomeConfig} />
+                <FormSubmit
                     isLoading={isCreatingOrUpdating}
-                    onClick={formMethods.handleSubmit(handleSubmitForm)}
-                >
-                    Lưu
-                </Button>
+                    onSubmit={formMethods.handleSubmit(handleSubmitForm)}
+                />
             </FormProvider>
         </div>
     )

@@ -2,9 +2,13 @@
 
 import { Card, CardContent, CardHeader, CardTitle, FormUploadMultiple } from '@/components'
 
-export const SliderConfig = () => {
+interface SliderConfigProps {
+    isLoading?: boolean
+}
+
+export const SliderConfig = ({ isLoading }: SliderConfigProps) => {
     return (
-        <Card>
+        <Card isLoading={isLoading}>
             <CardHeader>
                 <CardTitle>Cấu hình Slider</CardTitle>
             </CardHeader>

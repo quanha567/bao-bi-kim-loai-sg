@@ -11,7 +11,11 @@ import {
     FormUpload,
 } from '@/components'
 
-export const Extras = () => {
+interface ExtrasProps {
+    isLoading?: boolean
+}
+
+export const Extras = ({ isLoading }: ExtrasProps) => {
     const { control } = useFormContext()
     const {
         fields: extras,
@@ -34,7 +38,7 @@ export const Extras = () => {
     }
 
     return (
-        <Card>
+        <Card isLoading={isLoading}>
             <CardHeader>
                 <CardTitle>Hình ảnh khác</CardTitle>
             </CardHeader>
