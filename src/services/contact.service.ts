@@ -78,6 +78,13 @@ export const contactService = {
             data,
         })
     },
+    updateContact: async (data: ContactModel) => {
+        const { id, ...rest } = data
+        return prisma.contact.update({
+            data: rest,
+            where: { id },
+        })
+    },
     deleteContacts: async (ids: string[]) =>
         prisma.contact.deleteMany({ where: { id: { in: ids } } }),
 }

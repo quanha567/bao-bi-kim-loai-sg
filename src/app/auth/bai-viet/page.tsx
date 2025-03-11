@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import {
@@ -12,6 +13,7 @@ import {
     DeleteButton,
     ModalConfirm,
     TableButtonWrapper,
+    Typography,
     UpdateButton,
 } from '@/components'
 
@@ -63,7 +65,13 @@ const AdminArticlePage = () => {
         {
             key: 'title',
             label: 'Tiêu đề',
-            render: (data) => data.title,
+            render: (data) => (
+                <Link target="_blank" href={`/${data.slug}`}>
+                    <Typography as="span" variant="link" className="text-primary">
+                        {data.title}
+                    </Typography>
+                </Link>
+            ),
         },
         {
             key: 'slug',

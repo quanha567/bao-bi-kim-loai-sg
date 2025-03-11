@@ -5,7 +5,6 @@ import { Typography } from '@/components'
 
 export const UserInfoButton = () => {
     const session = useSession()
-    console.log('UserInfoButton  session:', session)
 
     return (
         <div className="flex cursor-pointer items-center gap-2 rounded-lg border p-1 hover:bg-zinc-200">

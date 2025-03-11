@@ -349,8 +349,9 @@ export const CustomTable = <T,>({
             {totalPages > 0 && (
                 <div className="mt-4 flex items-center justify-end space-x-4">
                     <Typography variant="link">
-                        Hiển thị {pageIndex * pageSize + 1} -{' '}
-                        {Math.min((pageIndex + 1) * pageSize, totalElements)} / {totalElements}
+                        Hiển thị từ dòng {pageIndex * pageSize + 1} -{' '}
+                        {Math.min((pageIndex + 1) * pageSize, totalElements)} / trên tổng{' '}
+                        {totalElements} dòng
                     </Typography>
                     <div className="flex items-center space-x-2">
                         <Pagination className="flex space-x-2">

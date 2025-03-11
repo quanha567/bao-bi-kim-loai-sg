@@ -20,3 +20,12 @@ export const useGetContacts = (params: SearchParams = {}) => {
         queryFn: () => contactApi.search(params),
     })
 }
+
+export const useUpdateContact = () => {
+    return useMutation({
+        mutationFn: async (data: ContactModel) => {
+            const response = await contactApi.update(data)
+            return response
+        },
+    })
+}

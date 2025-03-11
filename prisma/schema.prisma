@@ -97,12 +97,20 @@ model HomeConfig {
   updatedAt      DateTime  @updatedAt
 }
 
+enum ContactStatus {
+  NEW
+  REPLIED
+  RESOLVED
+  PROCESSING
+}
+
 model Contact {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   email     String
   phone     String
   message   String
+  status    ContactStatus @default(NEW)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

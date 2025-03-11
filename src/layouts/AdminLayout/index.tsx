@@ -1,6 +1,6 @@
 'use client'
 
-import { Archive, Box, FileText, Headset, Home, PanelTop, Settings } from 'lucide-react'
+import { Archive, Box, FileText, Headset, Home, Settings } from 'lucide-react'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -52,11 +52,11 @@ const items = [
         title: 'Danh sách liên hệ',
         url: ADMIN_PATH.CONTACT,
     },
-    {
-        icon: PanelTop,
-        title: 'Quản lý trang',
-        url: ADMIN_PATH.PAGE,
-    },
+    // {
+    //     icon: PanelTop,
+    //     title: 'Quản lý trang',
+    //     url: ADMIN_PATH.PAGE,
+    // },
     {
         icon: Settings,
         title: 'Cài đặt',
@@ -97,7 +97,9 @@ export function AppSidebar() {
     return (
         <Sidebar className="bg-white">
             <SidebarHeader className="border-b">
-                <Image src={Logo} alt="logo" className="w-3/5 object-contain" />
+                <Link href="/" target="_blank">
+                    <Image src={Logo} alt="logo" className="w-3/5 object-contain" />
+                </Link>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
