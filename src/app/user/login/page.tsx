@@ -13,7 +13,13 @@ const AdminLoginPage = () => {
     const formMethods = useForm()
 
     const signInWithGoogle = () => {
-        signIn('google')
+        try {
+            signIn('google', {
+                redirectTo: '/admin/dashboard',
+            })
+        } catch (err) {
+            console.log('signInWithGoogle  err:', err)
+        }
     }
 
     return (

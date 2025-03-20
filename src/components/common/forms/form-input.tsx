@@ -19,6 +19,7 @@ interface FormInputProps<T> {
     label: string
     name: Path<T>
     placeholder?: string
+    type?: string
 }
 
 export const FormInput = <TFormValues extends Record<string, unknown>>({
@@ -27,6 +28,7 @@ export const FormInput = <TFormValues extends Record<string, unknown>>({
     description,
     isRequired,
     placeholder,
+    type,
 }: FormInputProps<TFormValues>) => {
     const form = useFormContext<TFormValues>()
 
@@ -44,6 +46,7 @@ export const FormInput = <TFormValues extends Record<string, unknown>>({
                         <Input
                             placeholder={placeholder}
                             {...field}
+                            type={type}
                             value={field.value as number | readonly string[] | string | undefined}
                         />
                     </FormControl>

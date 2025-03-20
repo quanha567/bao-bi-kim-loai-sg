@@ -7,7 +7,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { UserInfoButton } from '../components'
-import { SignIn } from '../components/signin-button'
 import {
     Sidebar,
     SidebarContent,
@@ -80,7 +79,6 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
                             <Typography className="font-bold">{matchingRoute.title}</Typography>
                         </div>
                         <UserInfoButton />
-                        <SignIn />
                     </div>
                 )}
                 <QueryProvider>
