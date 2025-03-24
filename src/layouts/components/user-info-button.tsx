@@ -7,35 +7,12 @@ import Image from 'next/image'
 
 import { Avatar, Button, Popover, PopoverContent, PopoverTrigger, Typography } from '@/components'
 
-import { signOut } from '@/auth'
-import { useToast } from '@/hooks'
+interface UserInfoButtonProps {
+    onLogout: () => void
+}
 
-import { globalLoadingRef } from '../LayoutWrapper'
-
-export const UserInfoButton = () => {
+export const UserInfoButton = ({ onLogout }: UserInfoButtonProps) => {
     const { data } = useSession()
-    const { toast } = useToast()
-
-    const handleLogout = async () => {
-        try {
-            globalLoadingRef.current?.showLoading()
-            await signOut({
-                redirectTo: '/user/login',
-            })
-            toast({
-                title: 'Đăng xuất thành công',
-                variant: 'success',
-            })
-        } catch (err) {
-            console.log('handleLogout  err:', err)
-            toast({
-                title: 'Có lỗi xảy ra, vui lòng thử lại',
-                variant: 'destructive',
-            })
-        } finally {
-            globalLoadingRef.current?.hideLoading()
-        }
-    }
 
     return (
         <Popover>
@@ -78,7 +55,7 @@ export const UserInfoButton = () => {
                         {data?.user?.name}
                     </Typography>
                     <div className="mt-4 w-full">
-                        <Button variant="outline" className="w-full" onClick={handleLogout}>
+                        <Button variant="outline" className="w-full" onClick={onLogout}>
                             <LogOutIcon /> Đăng xuất
                         </Button>
                     </div>

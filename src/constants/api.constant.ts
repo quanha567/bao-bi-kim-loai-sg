@@ -8,4 +8,5 @@ export const API_URL = {
     HOME_CONFIG: '/home-config',
     CONTACTS: '/contacts',
     LAYOUT: '/layout',
+    ADMIN: '/admin',
 }

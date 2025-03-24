@@ -1,6 +1,7 @@
 export * from '../apiClient/axios'
 export * from './date'
 export * from './number'
+export * from './secure'
 export * from './url'
 export * from './utils'
 export * from './window'

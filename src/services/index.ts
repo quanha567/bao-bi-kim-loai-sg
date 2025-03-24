@@ -1,3 +1,4 @@
+export * from './admin-account.service'
 export * from './article.service'
 export * from './category.service'
 export * from './contact.service'

@@ -1,3 +1,4 @@
+export * from './admin-account.model'
 export * from './article.model'
 export * from './article.model'
 export * from './base.model'

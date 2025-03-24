@@ -6,6 +6,7 @@ import Image from 'next/image'
 
 import { Button, FormInput, Typography } from '@/components'
 
+import { ADMIN_PATH } from '@/constants'
 import GoogleSvg from '@/public/google-svg.svg'
 import LoginBg from '@/public/login-bg.png'
 
@@ -15,7 +16,7 @@ const AdminLoginPage = () => {
     const signInWithGoogle = () => {
         try {
             signIn('google', {
-                redirectTo: '/admin/dashboard',
+                redirectTo: ADMIN_PATH.DASHBOARD,
             })
         } catch (err) {
             console.log('signInWithGoogle  err:', err)
