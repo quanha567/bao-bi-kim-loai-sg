@@ -123,7 +123,6 @@ const AdminCategoryPage = () => {
     }
 
     const handleSubmitForm = async (data: CategoryModel) => {
-        console.log('handleSubmitForm  data:', data)
         try {
             if (data.id) {
                 updateCategory(data, {

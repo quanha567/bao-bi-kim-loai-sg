@@ -11,23 +11,25 @@ import { DefaultHeaderProps } from './default-header'
 type HeaderContactProps = DefaultHeaderProps
 
 export const HeaderContact = ({
-    setting: { address = '', email = '', phoneNumber = '' },
+    setting: { address = '', email = '', phoneNumber = '' } = {},
 }: HeaderContactProps) => {
     return (
         <div className="hidden bg-primary py-2 lg:block">
             <div className="container flex items-center justify-between text-white">
-                <Link
-                    href={getLink('maps', address)}
-                    className="flex flex-1 items-center gap-1 hover:underline"
-                >
-                    <MapPin size={16} />
-                    <Typography
-                        as="span"
-                        className="line-clamp-1 flex-1 text-xs font-medium uppercase"
+                {address?.[0] && (
+                    <Link
+                        href={getLink('maps', address[0])}
+                        className="flex flex-1 items-center gap-1 hover:underline"
                     >
-                        {address}
-                    </Typography>
-                </Link>
+                        <MapPin size={16} />
+                        <Typography
+                            as="span"
+                            className="line-clamp-1 flex-1 text-xs font-medium uppercase"
+                        >
+                            {address[0]}
+                        </Typography>
+                    </Link>
+                )}
                 <div className="divide-x-white flex items-center divide-x-[1px]">
                     <Link
                         href={getLink('phone', phoneNumber)}

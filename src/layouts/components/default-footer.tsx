@@ -16,15 +16,15 @@ import ZaLoIcon from '@/public/zalo-icon.png'
 type DefaultFooterProps = SettingResponseModel
 
 export const DefaultFooter = ({
-    setting: { address, email, phoneNumber },
+    setting: { address, email, phoneNumber, fbLink, zaloLink, youtubeLink } = {},
     categories = [],
 }: DefaultFooterProps) => {
     const contactMenu = [
-        address && {
-            href: getLink('maps', address),
+        ...(address?.map((item) => ({
+            href: getLink('maps', item),
             Icon: MapPin,
-            text: address,
-        },
+            text: item,
+        })) || []),
         phoneNumber && {
             href: getLink('phone', phoneNumber),
             Icon: PhoneCall,
@@ -42,14 +42,20 @@ export const DefaultFooter = ({
     const socials = [
         {
             icon: FbIcon,
+            label: 'Facebook',
+            link: fbLink,
         },
         {
             icon: ZaLoIcon,
+            label: 'Zalo',
+            link: zaloLink,
         },
         {
             icon: YtbIcon,
+            label: 'Youtube',
+            link: youtubeLink,
         },
-    ]
+    ].filter((item) => !!item.link)
 
     return (
         <footer className="bg-background">
@@ -65,14 +71,22 @@ export const DefaultFooter = ({
                         <Typography variant="p" className="mt-4 font-bold">
                             CÔNG TY TNHH SẢN XUẤT BAO BÌ KIM LOẠI SÀI GÒN
                         </Typography>
-                        <div className="mt-4 grid auto-cols-[40px] grid-flow-col gap-4">
+                        <div className="mt-4 flex flex-col gap-4">
                             {socials.map((social, index) => (
-                                <Link href="#" key={index}>
+                                <Link
+                                    key={index}
+                                    target="_blank"
+                                    href={String(social.link)}
+                                    className="flex items-center gap-1"
+                                >
                                     <Image
                                         alt="icon"
                                         src={social.icon}
-                                        className="aspect-square h-full w-full object-cover"
+                                        className="aspect-square size-6 object-cover"
                                     />
+                                    <Typography as="span" variant="link">
+                                        {social.label}
+                                    </Typography>
                                 </Link>
                             ))}
                         </div>

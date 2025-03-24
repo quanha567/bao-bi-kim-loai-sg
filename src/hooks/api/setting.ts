@@ -2,19 +2,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { settingApi } from '@/apiClient'
 import { QUERY_KEY } from '@/constants'
-import { SettingModel, SettingRequestModel } from '@/models'
+import { SettingModel, SettingRequestModel, SettingResponseModel } from '@/models'
 
 export const useGetSetting = () => {
     return useQuery({
         queryKey: [QUERY_KEY.SETTING],
         queryFn: async () => {
-            const settingResponse = await settingApi.getOne()
-            return settingResponse
-                ? {
-                      ...settingResponse,
-                      menus: settingResponse.menus ? JSON.parse(settingResponse.menus) : [],
-                  }
-                : {}
+            return (await settingApi.getOne()) as any as SettingResponseModel
         },
     })
 }
@@ -24,13 +18,7 @@ export const useCreateOrUpdateSetting = () => {
 
     return useMutation({
         mutationFn: async (data: SettingModel) => {
-            const dataSubmit: SettingRequestModel = {
-                ...data,
-                menus: Array.isArray(data.menus) ? JSON.stringify(data.menus) : '',
-            }
-
-            const response = await settingApi.createOrUpdate(dataSubmit)
-            return response
+            return await settingApi.createOrUpdate(data as SettingRequestModel)
         },
         onSuccess: () => {
             return queryClient.refetchQueries({

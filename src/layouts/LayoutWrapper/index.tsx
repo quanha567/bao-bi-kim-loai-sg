@@ -10,13 +10,15 @@ import { DefaultLayout } from '../DefaultLayout'
 export const LayoutWrapper = ({ children }: React.PropsWithChildren) => {
     const pathName = usePathname()
 
-    if (pathName.includes('/auth')) {
-        return <AdminLayout>{children}</AdminLayout>
-    }
-
-    if (pathName.includes('/login')) {
-        return children
-    }
-
-    return <DefaultLayout>{children}</DefaultLayout>
+    return (
+        <div className="relative">
+            {pathName.includes('/auth') ? (
+                <AdminLayout>{children}</AdminLayout>
+            ) : pathName.includes('/login') ? (
+                children
+            ) : (
+                <DefaultLayout>{children}</DefaultLayout>
+            )}
+        </div>
+    )
 }

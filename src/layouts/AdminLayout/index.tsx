@@ -1,14 +1,15 @@
 'use client'
 
-import { Archive, Box, FileText, Headset, Home, Settings } from 'lucide-react'
+import { Archive, Box, FileText, Headset, Home, Settings, User2 } from 'lucide-react'
+import { signOut, useSession } from 'next-auth/react'
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname } from 'next/navigation'
 
 import { UserInfoButton } from '../components'
-import { SignIn } from '../components/signin-button'
 import {
+    Loader,
     Sidebar,
     SidebarContent,
     SidebarGroup,
@@ -23,6 +24,7 @@ import {
 } from '@/components'
 
 import { ADMIN_PATH } from '@/constants'
+import { useToast } from '@/hooks'
 import { QueryProvider } from '@/providers'
 import Logo from '@/public/logo.jpg'
 
@@ -49,14 +51,14 @@ const items = [
     },
     {
         icon: Headset,
-        title: 'Danh sách liên hệ',
+        title: 'Quản lý liên hệ',
         url: ADMIN_PATH.CONTACT,
     },
-    // {
-    //     icon: PanelTop,
-    //     title: 'Quản lý trang',
-    //     url: ADMIN_PATH.PAGE,
-    // },
+    {
+        icon: User2,
+        title: 'Quản lý tài khoản',
+        url: ADMIN_PATH.ACCOUNT,
+    },
     {
         icon: Settings,
         title: 'Cài đặt',
@@ -64,10 +66,46 @@ const items = [
     },
 ]
 
+const emailAccounts = ['quanhavo005@gmail.com']
+
 export const AdminLayout = ({ children }: React.PropsWithChildren) => {
     const pathName = usePathname()
 
+    const { status, data } = useSession()
+
+    const { toast } = useToast()
+
     const matchingRoute = items.find((item) => item.url === pathName)
+
+    const handleLogout = async () => {
+        try {
+            await signOut({
+                redirectTo: ADMIN_PATH.LOGIN,
+            })
+            toast({
+                title: 'Đăng xuất thành công',
+                variant: 'success',
+            })
+        } catch (err) {
+            console.log('handleLogout  err:', err)
+            toast({
+                title: 'Có lỗi xảy ra, vui lòng thử lại',
+                variant: 'destructive',
+            })
+        }
+    }
+
+    if (status === 'loading') {
+        return <Loader className="fixed inset-0" />
+    }
+
+    if (status === 'unauthenticated') {
+        return redirect(ADMIN_PATH.LOGIN)
+    }
+
+    if (data?.user?.email && !emailAccounts.includes(data.user.email)) {
+        return <p> Not have permission</p>
+    }
 
     return (
         <SidebarProvider>
@@ -79,8 +117,7 @@ export const AdminLayout = ({ children }: React.PropsWithChildren) => {
                             <SidebarTrigger />
                             <Typography className="font-bold">{matchingRoute.title}</Typography>
                         </div>
-                        <UserInfoButton />
-                        <SignIn />
+                        <UserInfoButton onLogout={handleLogout} />
                     </div>
                 )}
                 <QueryProvider>

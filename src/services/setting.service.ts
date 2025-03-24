@@ -8,6 +8,7 @@ export const settingService = {
     createOrUpdateSetting: async (data: SettingRequestModel) => {
         if (data?.id) {
             const { id, ...rest } = data
+            console.log('createOrUpdateSetting:  rest:', rest)
             // Ensure the ID is valid before updating
             return await prisma.setting.update({
                 where: { id },

@@ -9,7 +9,7 @@ export interface MenuSettingModel extends BaseModel {
 }
 
 export interface SettingModel extends BaseModel {
-    address?: string
+    address?: string[]
     email?: string
     fbLink?: string
     menus?: MenuSettingModel[]

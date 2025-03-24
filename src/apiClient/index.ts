@@ -1,3 +1,4 @@
+export * from './admin-account.api'
 export * from './article.api'
 export * from './category.api'
 export * from './contact.api'
